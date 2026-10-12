@@ -1,0 +1,29 @@
+A320 model by amvlab — Creative Commons Attribution 4.0 International
+Copyright (c) 2026 amvlab. No endorsement is implied.
+
+Source: https://github.com/amvlab/aircraft-models
+Upstream file: models/A320_nologo.glb
+Upstream repository HEAD verified 2026-10-12:
+91d835e8e851b2317fe79af291c9fed6153fd525
+Download: https://raw.githubusercontent.com/amvlab/aircraft-models/main/models/A320_nologo.glb
+License: https://creativecommons.org/licenses/by/4.0/
+Legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+Upstream license notice is preserved in LICENSE.txt.
+
+Original GLB SHA-256:
+08cc60caafe3d0937f3e12e72c28bcb96dfdb39763ac124bcd4da8adaea11ab9
+Original bytes: 250472. Mesh: 5229 triangles, one material, one 1024x1024 JPEG atlas.
+
+Cloudline changes: original GLB bytes and embedded texture are unmodified.
+Godot imports the model with generated LODs/shadow mesh; runtime rotates its
++X nose to game +Z. A separate procedural three-strut/six-wheel gear assembly
+was added and follows the existing gear visibility state. No third-party
+livery or airline marks were added. Flight dynamics and collision dimensions
+were not changed. This visual is a game representation of an A320, not a
+certified exact A320-216 configuration. Flaps/control surfaces are not rigged
+or animated. The other L-4 and J-120 visuals remain procedural placeholders.
+
+CC BY 4.0 permits sharing and adaptation, including commercial use, with
+appropriate attribution, a license link, and identification of changes.
+This third-party model remains available under its own license; Cloudline's
+repository does not grant a new license to unrelated game code or assets.

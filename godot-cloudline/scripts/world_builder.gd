@@ -1,6 +1,8 @@
 extends RefCounted
 class_name CloudlineWorld
 
+const A320_MODEL = preload("res://assets/models/a320/A320_nologo.glb")
+
 var root: Node3D
 var materials: Dictionary = {}
 
@@ -21,7 +23,7 @@ func box(parent: Node3D, pos: Vector3, size: Vector3, color: String) -> MeshInst
 	var mesh := BoxMesh.new()
 	mesh.size = size
 	n.mesh = mesh
-	n.material_override = mat(color)
+	n.material_override = pavement_material(color) if color in ["303b42","536165","596969"] else mat(color)
 	n.position = pos
 	parent.add_child(n)
 	return n
@@ -94,6 +96,7 @@ func build(parent: Node3D, key: String, model) -> Node3D:
 			label(root,Vector3(405,elevation+55,-440),"KOTA KINABALU · BKI" if key=="bki" else "CLOUDLINE ISLAND")
 		box(root,Vector3(440,elevation+20,230),Vector3(20,40,20),"b2c4bc")
 		box(root,Vector3(440,elevation+43,230),Vector3(33,9,32),"274c60")
+		airport_details(elevation,key)
 		var rng := RandomNumberGenerator.new()
 		rng.seed = 210 if key=="bki" else 320
 		for i in range(90):
@@ -105,11 +108,15 @@ func build(parent: Node3D, key: String, model) -> Node3D:
 		var pos := Vector3(rng.randf_range(-17000,17000),rng.randf_range(1900,4100),rng.randf_range(-19000,19000))
 		ellipsoid(root,pos,Vector3(650,180,400),"e9f1e9")
 		ellipsoid(root,pos+Vector3(210,30,30),Vector3(450,190,350),"e9f1e9")
+	batch_static_boxes()
 	return root
 
 func aircraft(parent: Node3D, type: String) -> Node3D:
 	var plane := Node3D.new()
 	parent.add_child(plane)
+	if type == "a320":
+		build_imported_a320(plane)
+		return plane
 	var light := type == "light"
 	var len_f := 8.0 if light else 37.5
 	var radius := .72 if light else 3.8
@@ -156,7 +163,7 @@ func terrain(model) -> void:
 	mesh.generate_normals()
 	var instance := MeshInstance3D.new()
 	instance.mesh=mesh.commit()
-	instance.material_override=mat("607d59")
+	instance.material_override=ground_material()
 	root.add_child(instance)
 
 func wing(parent: Node3D, points: Array, color: String) -> void:
@@ -169,3 +176,107 @@ func wing(parent: Node3D, points: Array, color: String) -> void:
 	instance.mesh=surf.commit()
 	instance.material_override=mat(color)
 	parent.add_child(instance)
+
+# Genuine imported asset. Upstream GLB and embedded 1K atlas are preserved byte-for-byte.
+# Its node transforms already encode meters and +Y up; rotate the +X nose to +Z.
+func build_imported_a320(plane: Node3D) -> void:
+	var imported: Node3D=A320_MODEL.instantiate()
+	imported.name="ImportedA320"
+	imported.rotation.y=-PI/2
+	plane.add_child(imported)
+	plane.set_meta("model_source","https://github.com/amvlab/aircraft-models")
+	plane.set_meta("model_license","CC BY 4.0")
+	# The source mesh has no landing gear or animated control surfaces. This small
+	# procedural assembly is separate so existing G/gear behavior remains intact.
+	var gear:=Node3D.new()
+	gear.name="Gear"
+	plane.add_child(gear)
+	for pos in [Vector3(0,-2.5,11.7),Vector3(-3,-2.5,-2.0),Vector3(3,-2.5,-2.0)]:
+		cylinder(gear,pos,.11,1.6,"9aa8ad")
+		for side in [-1,1]:
+			var wheel:=cylinder(gear,Vector3(pos.x+side*.3,-3.4,pos.z),.5,.32,"18232b")
+			wheel.rotation.z=PI/2
+			var hub:=cylinder(gear,Vector3(pos.x+side*.47,-3.4,pos.z),.23,.025,"91a0a5")
+			hub.rotation.z=PI/2
+
+func cylinder(parent: Node3D,pos: Vector3,radius: float,height: float,color: String) -> MeshInstance3D:
+	var mesh:=CylinderMesh.new()
+	mesh.top_radius=radius; mesh.bottom_radius=radius; mesh.height=height
+	mesh.radial_segments=12; mesh.rings=1
+	var instance:=MeshInstance3D.new()
+	instance.mesh=mesh; instance.material_override=mat(color); instance.position=pos
+	parent.add_child(instance)
+	return instance
+
+func ground_material() -> ShaderMaterial:
+	if materials.has("terrain_shader"): return materials.terrain_shader
+	var shader:=Shader.new()
+	shader.code="""
+shader_type spatial;
+render_mode diffuse_burley;
+varying vec3 world;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
+void vertex(){world=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz;}
+void fragment(){float macro=noise(world.xz*.0017);float field=noise(world.xz*.009);float grain=noise(world.xz*.4);vec3 low=mix(vec3(.19,.26,.16),vec3(.37,.39,.22),macro);vec3 high=vec3(.32,.35,.28);ALBEDO=mix(low,high,smoothstep(700.0,2800.0,world.y))*(.86+field*.2+grain*.06);ROUGHNESS=.98;}
+"""
+	var material:=ShaderMaterial.new(); material.shader=shader
+	materials.terrain_shader=material
+	return material
+
+func pavement_material(color: String) -> ShaderMaterial:
+	var key: String="pavement_"+color
+	if materials.has(key): return materials[key]
+	var shader:=Shader.new()
+	shader.code="""
+shader_type spatial;
+uniform vec4 tint : source_color;
+varying vec3 world;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+void vertex(){world=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz;}
+void fragment(){float grain=hash(floor(world.xz*10.0));float slabs=step(.12,mod(world.x,16.0))*step(.1,mod(world.z,22.0));float touchdown=1.0-smoothstep(120.0,500.0,abs(abs(world.z)-1400.0));float skid=exp(-pow((abs(world.x)-3.7)*.7,2.0))*.045*touchdown;float fade=1.0-smoothstep(70.0,500.0,distance(CAMERA_POSITION_WORLD,world));ALBEDO=tint.rgb*(.92+grain*.12*fade)*(.9+.1*slabs)-vec3(skid*fade);ROUGHNESS=.94;}
+"""
+	var material:=ShaderMaterial.new(); material.shader=shader
+	material.set_shader_parameter("tint",Color(color))
+	materials[key]=material
+	return material
+
+func airport_details(elevation: float,key: String) -> void:
+	# Architectural accents stay within existing terminal collider volumes.
+	var facade_x:=399.4 if key=="can" else 337.0
+	var top:=22.0 if key=="can" else 14.0
+	box(root,Vector3(facade_x,elevation+top*.55,-440),Vector3(.4,top*.55,425),"244c5d")
+	for z in range(-640,-239,12):
+		box(root,Vector3(facade_x-.3,elevation+top*.55,z),Vector3(.7,top*.6,.6),"a6b8b8")
+	for level in [top*.3,top*.58,top*.82]:
+		box(root,Vector3(facade_x-.3,elevation+level,-440),Vector3(.7,.45,425),"a6b8b8")
+	# Apron stand centerlines and restrained inset edge lights, no new obstacles.
+	for z in [-620,-530,-350,-260]:
+		box(root,Vector3(274,elevation+.31,z),Vector3(75,.04,.65),"f3c857")
+		box(root,Vector3(238,elevation+.32,z),Vector3(.65,.04,20),"f3c857")
+	for z in range(-1400,1401,120):
+		box(root,Vector3(83,elevation+.5,z),Vector3(.55,.25,.55),"61aed8")
+
+func batch_static_boxes() -> void:
+	# One unit-cube MultiMesh per material replaces hundreds of individual boxes.
+	# Geometry and collisions remain in their exact original world positions.
+	var groups: Dictionary={}
+	for child in root.get_children():
+		if child is MeshInstance3D and child.mesh is BoxMesh:
+			var material=child.material_override
+			if not groups.has(material): groups[material]=[]
+			groups[material].append(child)
+	for material in groups:
+		var objects: Array=groups[material]
+		var mesh:=BoxMesh.new(); mesh.size=Vector3.ONE
+		var multi:=MultiMesh.new(); multi.transform_format=MultiMesh.TRANSFORM_3D
+		multi.mesh=mesh; multi.instance_count=objects.size()
+		for i in range(objects.size()):
+			var object: MeshInstance3D=objects[i]
+			var transform: Transform3D=object.transform
+			transform.basis=transform.basis.scaled(object.mesh.size)
+			multi.set_instance_transform(i,transform)
+			root.remove_child(object); object.free()
+		var batch:=MultiMeshInstance3D.new(); batch.multimesh=multi
+		batch.material_override=material; batch.name="StaticBatch"
+		root.add_child(batch)

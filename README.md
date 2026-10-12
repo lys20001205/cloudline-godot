@@ -3,6 +3,8 @@
 Cloudline 的独立 Godot 手机试玩版。保留原有 PortFWeb / Cloudline 在线版，不改动旧站点。
 
 - Godot 4.6.3，Compatibility 渲染器，单线程 Web 导出
+- A320 已接入真实 GLB 模型与贴图（amvlab，CC BY 4.0）；L-4/J-120 及机场仍为简化模型
+- 模型来源、修改说明和许可：[MODEL-CREDITS.txt](cloudline-godot/MODEL-CREDITS.txt)
 - Godot 工程：`godot-cloudline/project.godot`
 - 网页导出：`cloudline-godot/`
 - GitHub Pages 工作流只发布网页导出目录
