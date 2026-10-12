@@ -28,6 +28,21 @@ const root = path.resolve(__dirname, '../../cloudline-godot');
     await page.waitForSelector('#loading', {state: 'hidden'});
     return {context, page};
   }
+  async function assertImmersive(page) {
+    await page.waitForFunction(() => canvas.width === Math.round(document.querySelector('#screen').getBoundingClientRect().width * devicePixelRatio)
+      && canvas.height === Math.round(document.querySelector('#screen').getBoundingClientRect().height * devicePixelRatio));
+    const layout = await page.evaluate(() => ({
+      bar: getComputedStyle(document.querySelector('#bar')).display,
+      background: getComputedStyle(document.body).backgroundColor,
+      rect: document.querySelector('#screen').getBoundingClientRect().toJSON(),
+      width: innerWidth, height: innerHeight,
+      overflow: document.documentElement.scrollHeight > innerHeight
+    }));
+    assert.equal(layout.bar, 'none'); assert.equal(layout.background, 'rgb(0, 0, 0)');
+    assert.equal(layout.rect.x, 0); assert.equal(layout.rect.y, 0);
+    assert.equal(layout.rect.width, layout.width); assert.equal(layout.rect.height, layout.height);
+    assert.equal(layout.overflow, false); checks += 7;
+  }
   try {
     browser = await chromium.launch({executablePath: process.env.CHROMIUM || '/usr/bin/chromium', headless: true, args: ['--no-sandbox']});
     let {context, page} = await setup();
@@ -35,10 +50,15 @@ const root = path.resolve(__dirname, '../../cloudline-godot');
     await page.locator('#display-button').click();
     await page.waitForFunction(() => document.fullscreenElement === document.documentElement); checks++;
     assert.equal(await page.locator('#display-button').innerText(), '退出全屏'); checks++;
-    await page.locator('#display-button').click();
+    assert.equal(await page.locator('#bar').isVisible(), false); checks++;
+    await assertImmersive(page);
+    await page.evaluate(() => window.cloudlineDisplay.toggle());
     await page.waitForFunction(() => !document.fullscreenElement); checks++;
+    assert.equal(await page.locator('#bar').isVisible(), true); checks++;
     await page.locator('#display-button').click();
     await page.waitForFunction(() => !!document.fullscreenElement); checks++;
+    await page.setViewportSize({width: 390, height: 844});
+    await assertImmersive(page);
     await page.evaluate(() => document.exitFullscreen());
     await page.waitForFunction(() => document.querySelector('#display-button').textContent === '进入全屏'); checks++;
     await page.locator('#help-button').click();
@@ -46,6 +66,8 @@ const root = path.resolve(__dirname, '../../cloudline-godot');
     assert.equal(await page.locator('#help').isVisible(), false); checks++;
     const dimensions = await page.evaluate(() => ({width: canvas.width, height: canvas.height, area: document.querySelector('#screen').getBoundingClientRect().toJSON()}));
     assert.equal(dimensions.width, dimensions.area.width); assert.equal(dimensions.height, dimensions.area.height); checks += 2;
+    await page.setViewportSize({width: 844, height: 390});
+    await page.waitForFunction(() => canvas.width === 844);
     await page.setViewportSize({width: 390, height: 844});
     await page.waitForFunction(() => canvas.width === 390); checks++;
     await context.close();
@@ -72,8 +94,12 @@ const root = path.resolve(__dirname, '../../cloudline-godot');
     await page.locator('#close-help').tap();
     await context.close();
     ({context, page} = await setup({}, () => Object.defineProperty(navigator, 'standalone', {value: true})));
+    await assertImmersive(page);
+    assert.equal(await page.locator('#help').isVisible(), false); checks++;
+    await page.setViewportSize({width: 390, height: 844});
+    await assertImmersive(page);
     assert.match(await page.locator('#mode').innerText(), /主屏幕模式/); checks++;
-    await page.locator('#display-button').click();
+    await page.evaluate(() => window.cloudlineDisplay.toggle());
     assert.equal(await page.locator('#fullscreen-button').isVisible(), false); checks++;
     assert.match(await page.locator('#feedback').innerText(), /已从主屏幕打开/); checks++;
     const manifestURL = await page.locator('link[rel=manifest]').evaluate(el => el.href);

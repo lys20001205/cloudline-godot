@@ -17,6 +17,10 @@ $GODOT_HEAD_INCLUDE
 html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #102c3d; color: #edf7fc; font: 14px system-ui, sans-serif; }
 #app { width: 100%; height: 100%; height: 100dvh; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); display: flex; flex-direction: column; }
 #bar { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 8px; background: #102c3d; }
+/* Fullscreen/installed play has no page toolbar or blue frame. Keep only the
+   device's safe-area inset so edge controls do not sit under a notch/gesture bar. */
+html.immersive, html.immersive body, html.immersive #app { background: #000; }
+html.immersive #bar { display: none; }
 #mode { font-size: 12px; }
 button { min-height: 44px; min-width: 44px; border: 1px solid #6593a9; border-radius: 6px; color: #fff; background: #183f54; padding: 6px 12px; font: inherit; touch-action: manipulation; cursor: pointer; }
 button:focus-visible { outline: 3px solid #ffe09a; outline-offset: -3px; }
@@ -63,6 +67,7 @@ progress { width: min(320px, 90%); }
   const standaloneQuery = window.matchMedia('(display-mode: standalone)');
   const installedFullscreenQuery = window.matchMedia('(display-mode: fullscreen)');
   let busy = false;
+  let wasImmersive = false;
   const active = () => document.fullscreenElement || document.webkitFullscreenElement;
   const standalone = () => navigator.standalone === true || standaloneQuery.matches || installedFullscreenQuery.matches;
   const supported = () => !!((root.requestFullscreen && document.fullscreenEnabled !== false) || (root.webkitRequestFullscreen && document.webkitFullscreenEnabled !== false));
@@ -72,9 +77,14 @@ progress { width: min(320px, 90%); }
     document.getElementById('close-help').focus();
   }
   function refresh() {
+    const immersive = !!active() || standalone();
+    root.classList.toggle('immersive', immersive);
+    if (immersive && !wasImmersive) { help.hidden = true; canvas.focus(); }
+    wasImmersive = immersive;
     fullButton.hidden = !supported() || !!active() || standalone();
     button.textContent = active() ? '退出全屏' : (standalone() ? '显示帮助' : (supported() ? '进入全屏' : '添加到主屏幕'));
     mode.textContent = active() ? 'Cloudline · 全屏' : (standalone() ? 'Cloudline · 主屏幕模式' : 'Cloudline · 横屏游玩');
+    resize();
   }
   function failure() {
     busy = false;
@@ -101,13 +111,13 @@ progress { width: min(320px, 90%); }
   document.getElementById('help-button').addEventListener('click', () => showHelp(''));
   fullButton.addEventListener('click', toggle);
   document.getElementById('close-help').addEventListener('click', () => { help.hidden = true; canvas.focus(); });
-  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !help.hidden) { help.hidden = true; button.focus(); } });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !help.hidden) { help.hidden = true; canvas.focus(); } });
   ['fullscreenchange', 'webkitfullscreenchange'].forEach(name => document.addEventListener(name, () => { busy = false; refresh(); resize(); }));
   ['fullscreenerror', 'webkitfullscreenerror'].forEach(name => document.addEventListener(name, failure));
   [standaloneQuery, installedFullscreenQuery].forEach(query => { if (query.addEventListener) query.addEventListener('change', refresh); });
   window.addEventListener('pageshow', refresh);
-  // Policy 0 gives the engine the actual available safe-area viewport, excluding
-  // the accessible toolbar. Godot observes these backing-size changes each frame.
+  // Policy 0 gives the engine the actual safe-area viewport, excluding the
+  // toolbar only in ordinary tabs. Godot observes backing-size changes each frame.
   function resize() {
     const rect = screen.getBoundingClientRect();
     const ratio = window.devicePixelRatio || 1;

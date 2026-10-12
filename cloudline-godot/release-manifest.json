@@ -6,7 +6,7 @@
   "threads": false,
   "source": {
     "godot-cloudline/.gitignore": "531d0d253cec1addb97b2cb2d144b6589ff934513eb9c9b8cf882cb49e4c0c32",
-    "godot-cloudline/README.md": "6067a548b3d4eaddb25efe6c38ccb08a0794d4cb0a3d7ae9cfd82385ef1d3204",
+    "godot-cloudline/README.md": "478c0fe4917af357ac3c8326d343523c8780c3f63fd8f8605b52140b13ffcaa2",
     "godot-cloudline/assets/FONT-LICENSE.txt": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b",
     "godot-cloudline/assets/GODOT-COPYRIGHT.txt": "b3330849267d56ddd3d62a513817506606c2195034411fe05859f0140bff9d8a",
     "godot-cloudline/assets/GODOT-LICENSE.txt": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80",
@@ -49,10 +49,10 @@
     "godot-cloudline/web-shell/cloudline-180.png": "c69ff8b4d46673dcce75baee4492a309e659d5d73bedc44c7c822bdb57254bc7",
     "godot-cloudline/web-shell/manifest.webmanifest": "6937b34360c46107c2af5c5c68cc9f89fa6368dcaff7e6f10f7d0ab9c71ec572",
     "godot-cloudline/web-shell/cloudline-192.png": "9b5e9bc57dd93c06242070152af8fbb2bb7a1b416ba6e9190e23e3efa9ce8c8f",
-    "godot-cloudline/web-shell/index.html": "5f2dd48950d3cc5eddfb4e8b092353244d40ed741339cccc494e815317a3f7d5",
+    "godot-cloudline/web-shell/index.html": "fa4822d413ab63ba83f8239b46ed4c15ba566d81744678d2859b5a865c6da627",
     "godot-cloudline/web-shell/cloudline-512.png": "5fb019c7d370005f26cca73d9f846a0c64ce85f8454a64b326faddea75f78f4c",
-    "godot-cloudline/web-build/test_mobile_state.cjs": "42a514162628703d6aa36dc3a72a1774f8bef8dd57b75029dc448e137fd3db4a",
-    "godot-cloudline/web-build/test_mobile_shell.cjs": "50e961901c4bfb6ecc3ec68ff52482844e347e8c71b1ad0568064ed1007a07e5",
+    "godot-cloudline/web-build/test_mobile_state.cjs": "417e50fdd0865e5352d18aac638a0e898760fb787c09e58a704029fa1dc2a705",
+    "godot-cloudline/web-build/test_mobile_shell.cjs": "459c695eab9d6da5e4e62cf7bb4b84a2168a5f51f1f52aacaa27ca413bcdaff5",
     "godot-cloudline/web-build/engine-manifest.json": "66b74830dcbba57dad66b42114a5966079f023b1a77b8531d6d33ce55915f8e3",
     "godot-cloudline/web-build/engine.wasm.gz": "9352825a316f4449b81d326706e78be95ed5a81c0e797f35879ef8b39bc505bd",
     "godot-cloudline/web-build/sync_mobile_shell.py": "718c3296cbb1233bc81b687d0ec03c402646ab2283f33b619fb52d475e855833",
@@ -88,8 +88,8 @@
       "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
     },
     "index.html": {
-      "bytes": 9828,
-      "sha256": "4b557cbed0b8c601f49a3ebb2e3ab5bdacd97c1f64271859af4430ddbbe5cfb6"
+      "bytes": 10354,
+      "sha256": "c8c19a40594872a6a2ebf13bc312e3e62cb490b6b6f484d729cc1390f8e805a1"
     },
     "index.icon.png": {
       "bytes": 5702,

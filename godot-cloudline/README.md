@@ -122,3 +122,5 @@ Safari/home-screen installation, safe-area rendering, audio, and 3D touch/perfor
 Implementation references: [Godot custom HTML shell](https://docs.godotengine.org/en/stable/tutorials/platform/web/customizing_html5_shell.html),
 [WebKit home-screen web apps](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/),
 [Safari 26 home-screen behavior](https://webkit.org/blog/17333/webkit-features-in-safari-26-0/).
+
+Fullscreen and installed standalone play hide the page toolbar and its blue background. Only device safe-area insets remain (black) to protect edge controls. Browser/system exit or the in-game SYS fullscreen toggle leaves fullscreen and restores the ordinary toolbar. In an installed app, SYS can still open installation/display help. The shell uses the available safe-area viewport without changing the game aspect policy.
