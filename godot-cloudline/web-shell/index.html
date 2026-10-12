@@ -27,9 +27,11 @@ button:focus-visible { outline: 3px solid #ffe09a; outline-offset: -3px; }
 #screen { position: relative; flex: 1; min-height: 0; overflow: hidden; background: #000; }
 #canvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
 #loading { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; padding: 24px; gap: 16px; background: #102c3d; text-align: center; }
-#loading[hidden], #help[hidden] { display: none; }
+#loading[hidden], #help[hidden], #recovery[hidden] { display: none; }
 progress { width: min(320px, 90%); }
 #help { position: absolute; z-index: 5; inset: 8px; max-width: 520px; max-height: calc(100% - 16px); height: fit-content; margin: auto; padding: 18px; border: 1px solid #6593a9; border-radius: 12px; background: #102c3d; box-shadow: 0 10px 60px #000b; overflow-y: auto; touch-action: pan-y; line-height: 1.6; }
+#recovery { position: absolute; z-index: 10; inset: 0; padding: 24px; overflow-y: auto; background: #102c3d; line-height: 1.6; }
+#diagnostics { overflow-wrap: anywhere; user-select: text; }
 #help h2 { margin: 0 0 8px; font-size: 20px; }
 #help p { margin: 8px 0; }
 #help-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
@@ -41,6 +43,13 @@ progress { width: min(320px, 90%); }
   <main id="screen">
     <canvas id="canvas" tabindex="0" aria-label="Cloudline 飞行游戏">浏览器不支持 Canvas</canvas>
     <div id="loading"><strong>Cloudline</strong><span id="load-message" role="status">正在加载飞行游戏…</span><progress id="progress" aria-label="游戏加载进度"></progress></div>
+    <section id="recovery" role="alert" hidden>
+      <h2>图形渲染已停止</h2>
+      <p id="recovery-message"></p>
+      <p>可先关闭其他占用较多内存的标签页，再点“重新加载”。若仍失败，请把下方诊断文字或截图发给我们，并注明 iPhone 型号和 iOS 版本。</p>
+      <p id="diagnostics"></p>
+      <button id="reload-button" type="button">重新加载</button>
+    </section>
     <section id="help" role="dialog" aria-modal="false" aria-labelledby="help-title" hidden>
       <h2 id="help-title">全屏与主屏幕</h2>
       <p id="feedback" role="status" aria-live="polite"></p>
@@ -56,6 +65,18 @@ progress { width: min(320px, 90%); }
 // Kept in the export shell so re-exporting cannot discard mobile behavior.
 (function () {
   'use strict';
+  // Coarse local capability profile only. No device IDs, GPU fingerprint or telemetry.
+  const ua = navigator.userAgent || '';
+  const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const safari = /Safari/.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|Android/.test(ua);
+  const mobile = ios || /Android|Mobile/.test(ua);
+  const simpleMaterials = ios || safari;
+  const profile = window.cloudlineRenderProfile = Object.freeze({
+    name: simpleMaterials ? 'safari-safe' : (mobile ? 'mobile-bounded' : 'standard'),
+    simpleMaterials, scale3D: 1,
+    maxDpr: simpleMaterials ? 1.5 : (mobile ? 2 : Infinity),
+    maxPixels: simpleMaterials ? 1000000 : (mobile ? 1500000 : Infinity)
+  });
   const root = document.documentElement;
   const canvas = document.getElementById('canvas');
   const screen = document.getElementById('screen');
@@ -66,6 +87,35 @@ progress { width: min(320px, 90%); }
   const mode = document.getElementById('mode');
   const standaloneQuery = window.matchMedia('(display-mode: standalone)');
   const installedFullscreenQuery = window.matchMedia('(display-mode: fullscreen)');
+  let stage = 'shell';
+  let lost = false;
+  let stoppedAt = '';
+  const recovery = document.getElementById('recovery');
+  function diagnosticText() {
+    return 'CL-SAFARI-1 · stage=' + (stoppedAt || stage) + ' · profile=' + profile.name +
+      ' · materials=' + (profile.simpleMaterials ? 'standard' : 'procedural') +
+      ' · canvas=' + canvas.width + 'x' + canvas.height + ' · dprCap=' + profile.maxDpr +
+      ' · pixelCap=' + profile.maxPixels + ' · startup3D=' + profile.scale3D;
+  }
+  function stop(message) {
+    if (!stoppedAt) stoppedAt = stage;
+    recovery.hidden = false;
+    document.getElementById('loading').hidden = true;
+    document.getElementById('recovery-message').textContent = message;
+    document.getElementById('diagnostics').textContent = diagnosticText();
+  }
+  window.cloudlineDiagnostics = {
+    stage(value) { if (!lost && !stoppedAt) stage = value; },
+    text: diagnosticText,
+    failed(unsupported) { if (lost) return; stop(unsupported ? '此浏览器缺少运行游戏所需的功能（包括 WebGL 2）。请更新 Safari / iOS 后重试。' : '游戏下载或图形初始化未能完成。请检查网络后手动重试；若继续失败，请发送下方诊断信息。'); },
+    get stopped() { return !!stoppedAt; }
+  };
+  canvas.addEventListener('webglcontextlost', () => {
+    lost = true;
+    stop('浏览器已释放 WebGL 图形资源。当前游戏无法继续，请手动重新加载。');
+  });
+  // No automatic reload/recovery loop; the user controls the next attempt.
+  document.getElementById('reload-button').addEventListener('click', () => window.location.reload());
   let busy = false;
   let wasImmersive = false;
   const active = () => document.fullscreenElement || document.webkitFullscreenElement;
@@ -120,9 +170,12 @@ progress { width: min(320px, 90%); }
   // toolbar only in ordinary tabs. Godot observes backing-size changes each frame.
   function resize() {
     const rect = screen.getBoundingClientRect();
-    const ratio = window.devicePixelRatio || 1;
-    const width = Math.max(1, Math.round(rect.width * ratio));
-    const height = Math.max(1, Math.round(rect.height * ratio));
+    if (lost || rect.width <= 0 || rect.height <= 0) return;
+    const nativeRatio = Number.isFinite(window.devicePixelRatio) && window.devicePixelRatio > 0 ? window.devicePixelRatio : 1;
+    const ratio = Math.min(nativeRatio, profile.maxDpr, Math.sqrt(profile.maxPixels / (rect.width * rect.height)));
+    // Floor keeps the backing store strictly inside the budget, even after rotation.
+    const width = Math.max(1, Math.floor(rect.width * ratio));
+    const height = Math.max(1, Math.floor(rect.height * ratio));
     if (canvas.width !== width) canvas.width = width;
     if (canvas.height !== height) canvas.height = height;
   }
@@ -142,14 +195,16 @@ GODOT_CONFIG.ensureCrossOriginIsolationHeaders = false;
   const loading = document.getElementById('loading');
   const message = document.getElementById('load-message');
   const progress = document.getElementById('progress');
-  function fail(error) { message.textContent = '加载失败：' + (error.message || String(error)) + '。请检查网络，并使用支持 WebGL 2 的浏览器重新打开。'; progress.hidden = true; }
+  function fail(error, unsupported = false) { window.cloudlineDiagnostics.failed(unsupported); message.textContent = '加载失败：' + (error.message || String(error)) + '。请检查网络，并使用支持 WebGL 2 的浏览器重新打开。'; progress.hidden = true; }
   try {
     const missing = Engine.getMissingFeatures({ threads: false });
-    if (missing.length) { fail(new Error(missing.join(', '))); return; }
+    if (missing.length) { fail(new Error(missing.join(', ')), true); return; }
+    window.cloudlineDiagnostics.stage('engine-start');
     new Engine(GODOT_CONFIG).startGame({ onProgress(current, total) {
+      window.cloudlineDiagnostics.stage(total > 0 && current >= total ? 'download-complete' : 'downloading');
       if (total > 0) { progress.value = current; progress.max = total; }
       else { progress.removeAttribute('value'); }
-    }}).then(() => { loading.hidden = true; }, fail);
+    }}).then(() => { if (!window.cloudlineDiagnostics.stopped) loading.hidden = true; }, fail);
   } catch (error) { fail(error); }
 }());
 </script>

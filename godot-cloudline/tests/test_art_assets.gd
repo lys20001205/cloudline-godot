@@ -33,6 +33,16 @@ func inspect_mesh(node: Node, relative: Node3D) -> void:
 func run() -> void:
 	var host:=Node3D.new(); root.add_child(host)
 	var builder=World.new()
+	check(builder.ground_material() is ShaderMaterial,"standard desktop keeps terrain shader")
+	check(builder.pavement_material("303b42") is ShaderMaterial,"standard desktop keeps pavement shader")
+	check(not builder.pavement_material("303b42").shader.code.contains("pow("),"pavement has no undefined negative-base pow")
+	for x in [-10000.0,-3.7,0.0,3.7,10000.0]:
+		var d: float=(abs(x)-3.7)*.7
+		check(is_finite(exp(-(d*d))),"finite pavement skid at x="+str(x))
+	builder.conservative_materials=true
+	check(builder.ground_material() is StandardMaterial3D,"safe terrain uses standard material even with cached shader")
+	check(builder.pavement_material("303b42") is StandardMaterial3D,"safe pavement uses standard material")
+	check(builder.pavement_material("303b42").albedo_color==Color("303b42"),"safe runway color preserved")
 	var plane: Node3D=builder.aircraft(host,"a320")
 	check(plane.has_node("ImportedA320"),"A320 loads genuine imported PackedScene")
 	check(plane.has_node("Gear"),"gear control contract preserved")

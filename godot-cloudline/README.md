@@ -150,10 +150,11 @@ individual draw calls; their original positions and collision definitions remain
 
 - All existing headless suites pass: 44 physics, 52 route, 18 core UI, 74 navigation,
   62 environment/audio, 131 parity UI, and three full collision-aware route starts
-- 15 new `tests/test_art_assets.gd` checks validate actual imported topology,
+- 26 `tests/test_art_assets.gd` checks validate material profiles, finite shader math, imported topology,
   atlas dimensions, meter scale, nose orientation, gear separation, fallback planes,
   batching and unchanged simulation state
-- 36 deterministic mobile-shell checks pass; prior immersive fullscreen source is unchanged
+- 74 deterministic mobile-shell checks pass, including previous immersive/fullscreen
+  flows, bounded backing resolution, profile choice and context-loss recovery
 - Deterministic native screenshots at 1280×720 use `tests/capture_visuals.gd`
   (requires a graphical renderer; explicitly rejects headless)
 - Native graphical renderer: Godot 4.6.3 Compatibility, X11, Mesa llvmpipe software
@@ -175,3 +176,35 @@ A320 atlas needs about 5.33 MiB RGBA8 including mipmaps before renderer compress
 The shipped Web engine is unchanged; only the content PCK and its size/checksum are
 updated. Exact download sizes and frozen source/artifact SHA-256 values are in
 `cloudline-godot/release-manifest.json`.
+
+
+## Safari startup mitigation (CL-SAFARI-1)
+
+The iPhone report is a WebGL context loss after the loading bar completes. Its
+root cause has not been reproduced on a real device. This patch is a conservative
+mitigation plus local diagnostics, not a verified iPhone compatibility fix.
+
+- Fix the pavement shader's undefined negative-base `pow(x, 2.0)` with `x*x`
+- iOS (including iPad desktop UA) and Safari select standard terrain/pavement
+  materials before scene construction; imported A320 mesh/atlas, airport markings,
+  buildings, lighting, collisions and flight controls are preserved
+- Safari/iOS canvas: maximum DPR 1.5 and 1,000,000 backing pixels; other mobile
+  browsers: maximum DPR 2 and 1,500,000 pixels. Other desktop browsers are unchanged
+- Startup 3D scale remains 1.0: native QA showed that an extra 0.85 scaled render
+  target increased memory, so the bounded canvas alone controls initial resolution.
+  HUD has no additional downscale. Pixel caps can still reduce sharpness compared
+  with uncapped Retina rendering. The existing SYS quality selector can change
+  3D scale afterward; diagnostics label only the startup value
+- Canvas sizing stays policy 0, uses the safe-area viewport and changes attributes
+  only when dimensions differ. Fullscreen/orientation events share the same budget
+- Context loss is terminal for the attempt: visible recovery instructions and an
+  explicit reload button, with no automated reload loop or security-setting change
+- Diagnostics are local text only: build label, startup stage, material profile,
+  backing dimensions, pixel/DPR caps and 3D scale. No GPU fingerprint, persistent
+  identifier, user-agent dump or telemetry is collected/transmitted
+- Native QA can select the same material profile with `-- --cloudline-safe-render`;
+  ordinary native desktop execution remains unchanged
+
+Tests separately assert material choice, finite shader math and canvas budgets.
+A combined-profile improvement cannot identify which hypothesis caused the device
+issue. Native llvmpipe and mock-browser tests cannot validate Safari's actual GPU.

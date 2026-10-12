@@ -30,6 +30,14 @@ var guidance_rings: Array[Node3D] = []
 var taxi_marker: Node3D
 
 func _ready() -> void:
+	# Native QA override is explicit and never enabled in ordinary desktop play.
+	var safe_profile := "--cloudline-safe-render" in OS.get_cmdline_user_args()
+	if OS.has_feature("web"):
+		safe_profile = bool(JavaScriptBridge.eval("!!(window.cloudlineRenderProfile && window.cloudlineRenderProfile.simpleMaterials)"))
+	builder.conservative_materials = safe_profile
+	# Keep 3D scale at the default 1.0: the shell already bounds the framebuffer.
+	# A separate scaled target added memory in native QA, so do not allocate one.
+	web_stage("scene-building")
 	get_viewport().gui_embed_subwindows=true
 	var environment := WorldEnvironment.new()
 	var env := Environment.new()
@@ -69,6 +77,14 @@ func _ready() -> void:
 	hud.game=self
 	canvas.add_child(hud)
 	running=false
+	web_stage("scene-ready")
+	if OS.has_feature("web"):
+		await RenderingServer.frame_post_draw
+		web_stage("first-frame")
+
+func web_stage(stage: String) -> void:
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("window.cloudlineDiagnostics && window.cloudlineDiagnostics.stage(" + JSON.stringify(stage) + ")")
 
 func start_flight(type: String, mode: String, weather: String) -> void:
 	if mode in ["bki_can","can_approach","can_taxi"]: type="a320"

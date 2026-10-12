@@ -6,7 +6,7 @@ const path = require('node:path');
 const html = fs.readFileSync(path.join(__dirname, '../web-shell/index.html'), 'utf8');
 const controller = html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
 let checks = 0;
-function setup({supported = true, standalone = false, reject = false, prefixed = false} = {}) {
+function setup({supported = true, standalone = false, reject = false, prefixed = false, ua = "", dpr = 2, platform = "", touches = 0} = {}) {
   const events = {}, els = {}, queries = {}, windowEvents = {};
   const viewport = {width: 844, height: 390};
   const element = id => els[id] ||= {hidden: id === 'help', width: 0, height: 0, textContent: '', handlers: {}, addEventListener(k, cb) {this.handlers[k] = cb;}, focus() {document.focused = id;}, getBoundingClientRect() {return {width: viewport.width, height: viewport.height - (classes.has('immersive') ? 0 : 44)};}};
@@ -16,8 +16,8 @@ function setup({supported = true, standalone = false, reject = false, prefixed =
   const request = () => {calls++; if (reject) return Promise.reject(new Error('denied')); document.fullscreenElement = document.documentElement; return Promise.resolve().then(() => events.fullscreenchange());};
   if (supported) document.documentElement[prefixed ? 'webkitRequestFullscreen' : 'requestFullscreen'] = request;
   document.exitFullscreen = () => {document.fullscreenElement = null; events.fullscreenchange(); return Promise.resolve();};
-  const window = {devicePixelRatio: 2, matchMedia: key => queries[key] ||= {matches: false, addEventListener(name, callback) {this.change = callback;}}, addEventListener(name, callback) {windowEvents[name] = callback;}};
-  vm.runInNewContext(controller, {document, window, navigator: {standalone}, Promise, Math});
+  const window = {devicePixelRatio: dpr, matchMedia: key => queries[key] ||= {matches: false, addEventListener(name, callback) {this.change = callback;}}, addEventListener(name, callback) {windowEvents[name] = callback;}};
+  vm.runInNewContext(controller, {document, window, navigator: {standalone, userAgent: ua, platform, maxTouchPoints: touches}, Promise, Math});
   return {window, document, els, events, queries, viewport, windowEvents, get calls() {return calls;}, click: id => element(id).handlers.click()};
 }
 const tick = () => new Promise(resolve => setImmediate(resolve));
@@ -61,5 +61,31 @@ const tick = () => new Promise(resolve => setImmediate(resolve));
   s = setup({reject: true}); s.click('display-button'); await tick();
   assert.equal(s.document.documentElement.classList.contains('immersive'), false); checks++;
   s = setup({prefixed: true}); s.click('display-button'); await tick(); assert.equal(s.calls, 1); checks++;
+  // Profile axes are asserted independently; combined success cannot establish a cause.
+  for (const ua of ['iPhone Safari', 'Macintosh Version/18 Safari']) {
+    s = setup({ua, dpr: 3});
+    assert.equal(s.window.cloudlineRenderProfile.simpleMaterials, true);
+    assert.equal(s.window.cloudlineRenderProfile.scale3D, 1); checks += 2;
+    for (const [width, height] of [[844,390], [390,844], [1366,1024], [4096,4096]]) {
+      s.viewport.width = width; s.viewport.height = height; s.windowEvents.resize();
+      assert.ok(s.els.canvas.width * s.els.canvas.height <= 1000000);
+      assert.ok(s.els.canvas.width <= width * 1.5);
+      const before = [s.els.canvas.width, s.els.canvas.height];
+      s.windowEvents.resize(); assert.deepEqual([s.els.canvas.width, s.els.canvas.height], before); checks += 3;
+    }
+    s.window.cloudlineDiagnostics.stage('scene-building');
+    s.els.canvas.handlers.webglcontextlost();
+    assert.equal(s.els.recovery.hidden, false);
+    assert.match(s.els.diagnostics.textContent, /stage=scene-building.*materials=standard/);
+    s.window.cloudlineDiagnostics.stage('first-frame');
+    assert.match(s.window.cloudlineDiagnostics.text(), /stage=scene-building/); checks += 3;
+  }
+  s = setup({ua: 'Android Chrome Mobile', dpr: 4});
+  assert.equal(s.window.cloudlineRenderProfile.simpleMaterials, false);
+  assert.equal(s.window.cloudlineRenderProfile.maxPixels, 1500000); checks += 2;
+  s = setup({ua: 'Macintosh Chrome Safari', dpr: 2});
+  assert.equal(s.window.cloudlineRenderProfile.simpleMaterials, false); checks++;
+  s = setup({platform: 'MacIntel', touches: 5});
+  assert.equal(s.window.cloudlineRenderProfile.simpleMaterials, true); checks++;
   console.log(`PASS ${checks} mobile controller checks (DOM/API doubles)`);
 })().catch(e => {console.error(e); process.exitCode = 1;});
