@@ -1,0 +1,9 @@
+{
+  "format": 1,
+  "engine": "Godot 4.6.3 single-thread Web release",
+  "gzip_file": "engine.wasm.gz",
+  "gzip_bytes": 9382282,
+  "gzip_sha256": "9352825a316f4449b81d326706e78be95ed5a81c0e797f35879ef8b39bc505bd",
+  "wasm_bytes": 37700666,
+  "wasm_sha256": "26b61ce95247012ab3dca3ff51e96d1cdbff44ee91a8c20a83e150afca83f1b6"
+}
