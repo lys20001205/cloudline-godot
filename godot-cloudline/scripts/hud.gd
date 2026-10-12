@@ -587,7 +587,10 @@ func build_environment() -> void:
 	fullscreen.text="切换全屏 / FULLSCREEN"
 	fullscreen.custom_minimum_size.y=48
 	fullscreen.pressed.connect(func():
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if DisplayServer.window_get_mode()==DisplayServer.WINDOW_MODE_FULLSCREEN else DisplayServer.WINDOW_MODE_FULLSCREEN))
+		if OS.has_feature("web") and JavaScriptBridge.eval("typeof window.cloudlineDisplay === 'object'"):
+			JavaScriptBridge.eval("window.cloudlineDisplay.toggle()")
+		else:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if DisplayServer.window_get_mode()==DisplayServer.WINDOW_MODE_FULLSCREEN else DisplayServer.WINDOW_MODE_FULLSCREEN))
 	col.add_child(fullscreen)
 	var close:=Button.new()
 	close.text="返回飞行系统"
