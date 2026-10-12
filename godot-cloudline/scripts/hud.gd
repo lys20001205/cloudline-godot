@@ -212,6 +212,14 @@ func build_menu() -> void:
 	disclaimer.text="游戏近似 / 非训练用途 · 简化机场 / SIM-T3 虚构机位"
 	disclaimer.add_theme_font_size_override("font_size",14)
 	col.add_child(disclaimer)
+	var credits:=RichTextLabel.new()
+	credits.bbcode_enabled=true
+	credits.fit_content=true
+	credits.scroll_active=false
+	credits.add_theme_font_size_override("normal_font_size",12)
+	credits.text="A320 model: [url=https://github.com/amvlab/aircraft-models]amvlab[/url] · [url=https://creativecommons.org/licenses/by/4.0/]CC BY 4.0[/url]\nAdapted orientation; added game gear. L-4/J-120 remain simplified."
+	credits.meta_clicked.connect(func(link): OS.shell_open(str(link)))
+	col.add_child(credits)
 
 func show_menu() -> void:
 	game.running=false
