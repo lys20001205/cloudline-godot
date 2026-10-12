@@ -6,20 +6,20 @@
   "threads": false,
   "source": {
     "godot-cloudline/.gitignore": "531d0d253cec1addb97b2cb2d144b6589ff934513eb9c9b8cf882cb49e4c0c32",
-    "godot-cloudline/README.md": "a04b840a3e422bb450f0cd09305f68ce3f4e3e28d7a66dc82fe282830acf3330",
+    "godot-cloudline/README.md": "6067a548b3d4eaddb25efe6c38ccb08a0794d4cb0a3d7ae9cfd82385ef1d3204",
     "godot-cloudline/assets/FONT-LICENSE.txt": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b",
     "godot-cloudline/assets/GODOT-COPYRIGHT.txt": "b3330849267d56ddd3d62a513817506606c2195034411fe05859f0140bff9d8a",
     "godot-cloudline/assets/GODOT-LICENSE.txt": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80",
     "godot-cloudline/assets/cloudline-ui.otf": "7c308c545c7f81261cf0aa3b44725079f82bfd03cfeb2eb9fe597d6632bf5a3c",
     "godot-cloudline/assets/cloudline-ui.otf.import": "7d73f85de0f5b5a592fd214e552eee1c76504e0449f4db1e5836bec1637b8693",
-    "godot-cloudline/export_presets.cfg": "b78d39c55866f70ad865ff2a255f1120fbc788016806c6ce536b1f9919eab8ff",
+    "godot-cloudline/export_presets.cfg": "004f8985be8c61558d633b49115313dae504309fa329adb8516f7b35fff78090",
     "godot-cloudline/main.tscn": "dfc277c8c1a565014658828831d20173542b4db74ce2bc75b6275522b6e753f1",
     "godot-cloudline/project.godot": "496aeca9ca71f614cbe3a570c8372d8ad1ca036601f4f8492bbb3a193665c62a",
     "godot-cloudline/scripts/environment_audio.gd": "38ec641c4959313763c665e8cccf0e162f20b688202df0243a80b03db0de26a0",
     "godot-cloudline/scripts/environment_audio.gd.uid": "f0a237f872951fe5c08c4bcf6393d6a815310c7549adb1c2c82546d5c903f566",
     "godot-cloudline/scripts/flight_model.gd": "366887734936d0fb3dd1ab208a8f2528225da45f05a9b09b9bf147a0e5801f40",
     "godot-cloudline/scripts/flight_model.gd.uid": "7303e023ad89c6f7544afe4a4a54a0c3319508303ea625927e157d1ccc60db82",
-    "godot-cloudline/scripts/hud.gd": "779d811a38130079f1d84069167fa44bdbdfbed70f0f42913b9a4af6fcbe669b",
+    "godot-cloudline/scripts/hud.gd": "d11f87dc3da28a217ab78629a47c05a100b023e359bdbd0242e4d1251846126c",
     "godot-cloudline/scripts/hud.gd.uid": "76aa92bec616d6b55003e81260062e9fcffd7e438020ec490605535c78b05a80",
     "godot-cloudline/scripts/main.gd": "6b48c664cd099c7d90c8bd090ead4b707cea31c575f65cea70b8931dd542a4a0",
     "godot-cloudline/scripts/main.gd.uid": "40be4e10a26ffab1d938afb2623f42016c33d475ccbfde19ec409dd2b86b8f8c",
@@ -45,7 +45,22 @@
     "godot-cloudline/tests/test_route.gd": "89b9ffd149c12e9494ba40415e2608639b39bd8c543afad61797fb938b75fd6c",
     "godot-cloudline/tests/test_route.gd.uid": "55d9e4811247560d1ca7b1a50e67ced44e641c8b6c5e81f6735d19b7a95ddf33",
     "godot-cloudline/tests/test_ui.gd": "2a5d891380179e72e2332d8031fcced10e6b19b949378c1c1db53bd1068d645f",
-    "godot-cloudline/tests/test_ui.gd.uid": "837a2340f43a91df3ed5406af6900958e2da89e80911752324aeb0d888a7db69"
+    "godot-cloudline/tests/test_ui.gd.uid": "837a2340f43a91df3ed5406af6900958e2da89e80911752324aeb0d888a7db69",
+    "godot-cloudline/web-shell/cloudline-180.png": "c69ff8b4d46673dcce75baee4492a309e659d5d73bedc44c7c822bdb57254bc7",
+    "godot-cloudline/web-shell/manifest.webmanifest": "6937b34360c46107c2af5c5c68cc9f89fa6368dcaff7e6f10f7d0ab9c71ec572",
+    "godot-cloudline/web-shell/cloudline-192.png": "9b5e9bc57dd93c06242070152af8fbb2bb7a1b416ba6e9190e23e3efa9ce8c8f",
+    "godot-cloudline/web-shell/index.html": "5f2dd48950d3cc5eddfb4e8b092353244d40ed741339cccc494e815317a3f7d5",
+    "godot-cloudline/web-shell/cloudline-512.png": "5fb019c7d370005f26cca73d9f846a0c64ce85f8454a64b326faddea75f78f4c",
+    "godot-cloudline/web-build/test_mobile_state.cjs": "42a514162628703d6aa36dc3a72a1774f8bef8dd57b75029dc448e137fd3db4a",
+    "godot-cloudline/web-build/test_mobile_shell.cjs": "50e961901c4bfb6ecc3ec68ff52482844e347e8c71b1ad0568064ed1007a07e5",
+    "godot-cloudline/web-build/engine-manifest.json": "66b74830dcbba57dad66b42114a5966079f023b1a77b8531d6d33ce55915f8e3",
+    "godot-cloudline/web-build/engine.wasm.gz": "9352825a316f4449b81d326706e78be95ed5a81c0e797f35879ef8b39bc505bd",
+    "godot-cloudline/web-build/sync_mobile_shell.py": "718c3296cbb1233bc81b687d0ec03c402646ab2283f33b619fb52d475e855833",
+    "godot-cloudline/web-build/assemble_wasm.py": "5645bfd2283cefe37c6ecd2d65ea2abb998ab0bb0cbe4178d153ed5f5bb6f377",
+    "godot-cloudline/web-build/test_assembly.py": "3e0f09ed4f20c9586bf15d65e57226e48d594bcdfa4e9837d40c68098f2c14a9",
+    "godot-cloudline/web-build/verify_release.py": "fa559bd71697631e938b293ba7dc3c966bc31fb9e041ee00795931a0ab1a0231",
+    "godot-cloudline/web-shell/.gdignore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "godot-cloudline/web-build/test_mobile_export.py": "9a4b639511ac6f91de8aa428e9ac5b4575f4511775510d618175528ad04be243"
   },
   "artifacts": {
     "FONT-LICENSE.txt": {
@@ -73,8 +88,8 @@
       "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
     },
     "index.html": {
-      "bytes": 5582,
-      "sha256": "e1616212730390d2dccdf12ab4f63573243f0115c58e2e9f61eaa1276df7cfc1"
+      "bytes": 9828,
+      "sha256": "4b557cbed0b8c601f49a3ebb2e3ab5bdacd97c1f64271859af4430ddbbe5cfb6"
     },
     "index.icon.png": {
       "bytes": 5702,
@@ -85,8 +100,8 @@
       "sha256": "e3f56ee40e6f84371053db06692cfac15e2c8659547b11c6b2dfa1996dabd981"
     },
     "index.pck": {
-      "bytes": 231520,
-      "sha256": "3162e094a9ddaabe7e8a2063221e54910c0dddeeec3cb1002493148d3991dd83"
+      "bytes": 231648,
+      "sha256": "200a40bb9f15e6174979c92bb5910ea246bf8d53baacf45fef85befd60812fc8"
     },
     "index.png": {
       "bytes": 21443,
@@ -95,6 +110,22 @@
     "index.wasm": {
       "bytes": 37700666,
       "sha256": "26b61ce95247012ab3dca3ff51e96d1cdbff44ee91a8c20a83e150afca83f1b6"
+    },
+    "cloudline-180.png": {
+      "bytes": 897,
+      "sha256": "c69ff8b4d46673dcce75baee4492a309e659d5d73bedc44c7c822bdb57254bc7"
+    },
+    "manifest.webmanifest": {
+      "bytes": 458,
+      "sha256": "6937b34360c46107c2af5c5c68cc9f89fa6368dcaff7e6f10f7d0ab9c71ec572"
+    },
+    "cloudline-192.png": {
+      "bytes": 951,
+      "sha256": "9b5e9bc57dd93c06242070152af8fbb2bb7a1b416ba6e9190e23e3efa9ce8c8f"
+    },
+    "cloudline-512.png": {
+      "bytes": 2823,
+      "sha256": "5fb019c7d370005f26cca73d9f846a0c64ce85f8454a64b326faddea75f78f4c"
     }
   },
   "tests": {

@@ -22,6 +22,10 @@ jobs:
       - uses: actions/configure-pages@v5
       - name: Test integrity-checked assembly
         run: python3 godot-cloudline/web-build/test_assembly.py
+      - name: Test mobile shell and export contract
+        run: |
+          node godot-cloudline/web-build/test_mobile_state.cjs
+          python3 godot-cloudline/web-build/test_mobile_export.py
       - name: Assemble official Godot engine
         run: python3 godot-cloudline/web-build/assemble_wasm.py
       - name: Verify frozen source and Web artifacts

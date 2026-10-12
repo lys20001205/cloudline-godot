@@ -89,3 +89,36 @@ Tests are excluded from Web export. Templates are not committed.
 
 The subset UI font is derived from Noto Sans CJK (SIL OFL 1.1); see assets/FONT-LICENSE.txt.
 Godot engine is MIT licensed; see https://godotengine.org/license/.
+
+## Mobile display shell (Android + iPhone)
+
+- The HTML toolbar is available during loading and after exiting fullscreen. On browsers
+  exposing the Fullscreen API, its button requests fullscreen synchronously on the user's tap.
+  Rejections display retry and home-screen guidance; unsupported browsers get home-screen help.
+- iPhone: open in Safari, Share → Add to Home Screen (enable Open as Web App if offered),
+  then launch the Cloudline icon. Android also supports its browser's install/add-to-home-screen flow.
+  This is standalone browser-chrome removal, not a promise to hide every system status/gesture bar.
+- The manifest uses relative `id`, `scope`, `start_url`, and icon URLs, resolving beneath
+  `/cloudline-godot/`. No service worker or offline asset cache is installed. Internet is required.
+  Single-threaded rendering stays unchanged and needs no new COOP/COEP headers.
+- Safe-area padding and a reserved 44 px toolbar protect the game from cutouts and toolbar overlap.
+  Canvas backing dimensions follow the available viewport using Godot resize policy 0.
+- `web-shell/index.html` is the persistent custom export template. After any Godot export run:
+  `python3 godot-cloudline/web-build/sync_mobile_shell.py`
+  This also copies the manifest and icons, and can update the shell without repacking the game.
+  Freeze checksums only after this sync. The Web SYS fullscreen button uses the same shell controller; native fullscreen stays unchanged.
+  Only HUD routing and its small PCK were rebuilt; engine JS/WASM and flight logic are unchanged.
+  For pack-only updates: `godot --headless --path godot-cloudline --export-pack Web ../cloudline-godot/index.pck`,
+  then run the sync script (it also refreshes PCK file size).
+- Shell state regression: `node godot-cloudline/web-build/test_mobile_state.cjs`
+  Browser smoke (Playwright/Chromium required): `node godot-cloudline/web-build/test_mobile_shell.cjs`
+  These test the HTML shell, not Godot WebGL rendering or real-device performance.
+
+The mobile shell has passed deterministic controller tests and the original headless Godot suites.
+The browser smoke could not run in this executor (Chromium local socket creation is restricted;
+its localhost is unreachable from the separate cloud browser). Real Android Chrome and iPhone
+Safari/home-screen installation, safe-area rendering, audio, and 3D touch/performance still need testing.
+
+Implementation references: [Godot custom HTML shell](https://docs.godotengine.org/en/stable/tutorials/platform/web/customizing_html5_shell.html),
+[WebKit home-screen web apps](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/),
+[Safari 26 home-screen behavior](https://webkit.org/blog/17333/webkit-features-in-safari-26-0/).
