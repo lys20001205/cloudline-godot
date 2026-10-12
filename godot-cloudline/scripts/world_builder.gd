@@ -5,6 +5,8 @@ const A320_MODEL = preload("res://assets/models/a320/A320_nologo.glb")
 
 var root: Node3D
 var materials: Dictionary = {}
+# Selected once before scene creation; imported A320 materials stay unchanged.
+var conservative_materials := false
 
 func mat(color: String) -> StandardMaterial3D:
 	if materials.has(color): return materials[color]
@@ -208,7 +210,8 @@ func cylinder(parent: Node3D,pos: Vector3,radius: float,height: float,color: Str
 	parent.add_child(instance)
 	return instance
 
-func ground_material() -> ShaderMaterial:
+func ground_material() -> Material:
+	if conservative_materials: return mat("536342")
 	if materials.has("terrain_shader"): return materials.terrain_shader
 	var shader:=Shader.new()
 	shader.code="""
@@ -224,7 +227,8 @@ void fragment(){float macro=noise(world.xz*.0017);float field=noise(world.xz*.00
 	materials.terrain_shader=material
 	return material
 
-func pavement_material(color: String) -> ShaderMaterial:
+func pavement_material(color: String) -> Material:
+	if conservative_materials: return mat(color)
 	var key: String="pavement_"+color
 	if materials.has(key): return materials[key]
 	var shader:=Shader.new()
@@ -234,7 +238,7 @@ uniform vec4 tint : source_color;
 varying vec3 world;
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 void vertex(){world=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz;}
-void fragment(){float grain=hash(floor(world.xz*10.0));float slabs=step(.12,mod(world.x,16.0))*step(.1,mod(world.z,22.0));float touchdown=1.0-smoothstep(120.0,500.0,abs(abs(world.z)-1400.0));float skid=exp(-pow((abs(world.x)-3.7)*.7,2.0))*.045*touchdown;float fade=1.0-smoothstep(70.0,500.0,distance(CAMERA_POSITION_WORLD,world));ALBEDO=tint.rgb*(.92+grain*.12*fade)*(.9+.1*slabs)-vec3(skid*fade);ROUGHNESS=.94;}
+void fragment(){float grain=hash(floor(world.xz*10.0));float slabs=step(.12,mod(world.x,16.0))*step(.1,mod(world.z,22.0));float touchdown=1.0-smoothstep(120.0,500.0,abs(abs(world.z)-1400.0));float d=(abs(world.x)-3.7)*.7;float skid=exp(-(d*d))*.045*touchdown;float fade=1.0-smoothstep(70.0,500.0,distance(CAMERA_POSITION_WORLD,world));ALBEDO=tint.rgb*(.92+grain*.12*fade)*(.9+.1*slabs)-vec3(skid*fade);ROUGHNESS=.94;}
 """
 	var material:=ShaderMaterial.new(); material.shader=shader
 	material.set_shader_parameter("tint",Color(color))

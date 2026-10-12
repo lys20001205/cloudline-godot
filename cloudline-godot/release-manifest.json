@@ -7,7 +7,7 @@
   "source": {
     "README.md": "50bd664d9da7c686f8ea5277d5dda7e23b9b858c51f7ce1dd077b56c4b62dff2",
     "godot-cloudline/.gitignore": "531d0d253cec1addb97b2cb2d144b6589ff934513eb9c9b8cf882cb49e4c0c32",
-    "godot-cloudline/README.md": "b9ae4a6fdfb4e1ccbfdfcc3d06b9e233fd9e5c351fea02c4a35765a161b2d53b",
+    "godot-cloudline/README.md": "d5db8f19b8a7569c109a9c570ed63f46f431759a478dea8cd70d9f7b718cce2a",
     "godot-cloudline/assets/FONT-LICENSE.txt": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b",
     "godot-cloudline/assets/GODOT-COPYRIGHT.txt": "b3330849267d56ddd3d62a513817506606c2195034411fe05859f0140bff9d8a",
     "godot-cloudline/assets/GODOT-LICENSE.txt": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80",
@@ -28,7 +28,7 @@
     "godot-cloudline/scripts/flight_model.gd.uid": "7303e023ad89c6f7544afe4a4a54a0c3319508303ea625927e157d1ccc60db82",
     "godot-cloudline/scripts/hud.gd": "4305afd3402aa9a877782a5231981b2e49c9cf6d540fb12fbe7f7f8ddd9ca3ae",
     "godot-cloudline/scripts/hud.gd.uid": "76aa92bec616d6b55003e81260062e9fcffd7e438020ec490605535c78b05a80",
-    "godot-cloudline/scripts/main.gd": "6b48c664cd099c7d90c8bd090ead4b707cea31c575f65cea70b8931dd542a4a0",
+    "godot-cloudline/scripts/main.gd": "20c04d5862fc1f3b9e99818ae895ac27e9780d94170b26f614e666a9c6091c7f",
     "godot-cloudline/scripts/main.gd.uid": "40be4e10a26ffab1d938afb2623f42016c33d475ccbfde19ec409dd2b86b8f8c",
     "godot-cloudline/scripts/navigation_display.gd": "072f3670795a415f5ee0f2157e32d45c9abba187ae374a158c6a60db086e2faa",
     "godot-cloudline/scripts/navigation_display.gd.uid": "f9fbcd7cfd7495c6293f54a845d585a4137524af78d6754145ff753a17d787a6",
@@ -36,7 +36,7 @@
     "godot-cloudline/scripts/route_mission.gd.uid": "01941a0f4378c61824983110a8390ed09a2809da216f2a1dba11bb6f7164a09c",
     "godot-cloudline/scripts/test_flight_model.gd": "d5a4eacdbf7f983d4c872113ba37279f23fb7505a57150d20c908527c8610e36",
     "godot-cloudline/scripts/test_flight_model.gd.uid": "8dd9a39eaaa823c34b1a186067438d7c98a58506c301d4202fa1a69a40c3d933",
-    "godot-cloudline/scripts/world_builder.gd": "70e074ccad280be748ab8e207c7c02cb6f6d43bac6b9c05a7cccc4ba60fe2b67",
+    "godot-cloudline/scripts/world_builder.gd": "1286c37266c9804f96fb0f24f08920a0a970e96d42c46036459a6bd79dcaa9b8",
     "godot-cloudline/scripts/world_builder.gd.uid": "ecf71beca73c6304fce7e46a4e0bd2c74f75e7e969c406e256f7bb82a0f76791",
     "godot-cloudline/tests/capture_visuals.gd": "d8fefa61b08fd80628a2036e5f69c400814cb821b78026d4632073dddadbcf4e",
     "godot-cloudline/tests/capture_visuals.gd.uid": "620cc7dca45fbf60466e5f32251113854082e910494e11294a541de046310935",
@@ -45,7 +45,7 @@
     "godot-cloudline/tests/integration.gd": "8752a6618ae334111d72fda4bdd0ee39d21e5d75619f4f833034921f080e759b",
     "godot-cloudline/tests/integration.gd.uid": "67e889f1fd70a9d788102907758c8c82685b5c0ee9f01dd27dd20111dbe128a7",
     "godot-cloudline/tests/run_all.sh": "a6e9e8d0fddd009c902f565d4811a9548c8f503de373346d8a25ea6e94fb82c8",
-    "godot-cloudline/tests/test_art_assets.gd": "5cbaf5a0fdd5e15d8b4a1abdd67c7ba8f718e69e9c557e9ce8168b0f67effa53",
+    "godot-cloudline/tests/test_art_assets.gd": "d45c6dd17079db3b8343fad1a8861ea2b8947997851890727f8a3904d6c12f7e",
     "godot-cloudline/tests/test_art_assets.gd.uid": "61a525e406a66654cb38cf0e147fa769b5323249bf0a7498aafbdae121449381",
     "godot-cloudline/tests/test_environment_audio.gd": "933619be6e313d57d8d86e3a2a83bccce83456294d215da1d27894777b4738dc",
     "godot-cloudline/tests/test_environment_audio.gd.uid": "2eb6862addc88c8ff7275125a80b7ee36e3a22e3553ce0009d0fc5efe7d12cc7",
@@ -66,13 +66,13 @@
     "godot-cloudline/web-build/test_assembly.py": "3e0f09ed4f20c9586bf15d65e57226e48d594bcdfa4e9837d40c68098f2c14a9",
     "godot-cloudline/web-build/test_mobile_export.py": "9a4b639511ac6f91de8aa428e9ac5b4575f4511775510d618175528ad04be243",
     "godot-cloudline/web-build/test_mobile_shell.cjs": "459c695eab9d6da5e4e62cf7bb4b84a2168a5f51f1f52aacaa27ca413bcdaff5",
-    "godot-cloudline/web-build/test_mobile_state.cjs": "417e50fdd0865e5352d18aac638a0e898760fb787c09e58a704029fa1dc2a705",
+    "godot-cloudline/web-build/test_mobile_state.cjs": "3c778332518b367937110acc53b7a49ec66a51de3faf19551cbb6ff848ef8650",
     "godot-cloudline/web-build/verify_release.py": "fa559bd71697631e938b293ba7dc3c966bc31fb9e041ee00795931a0ab1a0231",
     "godot-cloudline/web-shell/.gdignore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "godot-cloudline/web-shell/cloudline-180.png": "c69ff8b4d46673dcce75baee4492a309e659d5d73bedc44c7c822bdb57254bc7",
     "godot-cloudline/web-shell/cloudline-192.png": "9b5e9bc57dd93c06242070152af8fbb2bb7a1b416ba6e9190e23e3efa9ce8c8f",
     "godot-cloudline/web-shell/cloudline-512.png": "5fb019c7d370005f26cca73d9f846a0c64ce85f8454a64b326faddea75f78f4c",
-    "godot-cloudline/web-shell/index.html": "fa4822d413ab63ba83f8239b46ed4c15ba566d81744678d2859b5a865c6da627",
+    "godot-cloudline/web-shell/index.html": "1222fdea0d0602a4b90ec34d778334b9c1c484b2e9f8c99a1811686bd5ecf705",
     "godot-cloudline/web-shell/manifest.webmanifest": "6937b34360c46107c2af5c5c68cc9f89fa6368dcaff7e6f10f7d0ab9c71ec572"
   },
   "artifacts": {
@@ -101,8 +101,8 @@
       "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
     },
     "index.html": {
-      "bytes": 10355,
-      "sha256": "9f7e5449fae47f46f98dbce9a4a042d7e88da2b5b10642dd667850e93b0e9cda"
+      "bytes": 14001,
+      "sha256": "e820c56221cf75d3ffd779e4cae581799dabfcb94b8b217cb87843182edc099c"
     },
     "index.icon.png": {
       "bytes": 5702,
@@ -113,8 +113,8 @@
       "sha256": "e3f56ee40e6f84371053db06692cfac15e2c8659547b11c6b2dfa1996dabd981"
     },
     "index.pck": {
-      "bytes": 1029444,
-      "sha256": "eab7454db9bbc455bb502bcfacafa108e7750468ac98b92f089ac8e831c340c7"
+      "bytes": 1032460,
+      "sha256": "1a4e0f85725e1aafbe8f99a6e5ddfe4321c77b098c0638e8dd0dec1beac5a265"
     },
     "index.png": {
       "bytes": 21443,
@@ -155,17 +155,22 @@
     "core_ui": 18,
     "navigation": 74,
     "environment_audio_headless": 62,
-    "environment_audio_null_sink": "not rerun for art slice; headless 62 passed",
+    "environment_audio_null_sink": "Headless 62 passed; live audio not verified",
     "parity_ui": 131,
     "collision_route_starts": 3,
-    "native_graphics": "A320 ground, approach HUD, CAN airport; before/after same camera X11 llvmpipe. Final shader/model import successful; unchanged small texture cleanup warnings at engine exit.",
+    "native_graphics": "Final exact PCK: safe and default profiles on Godot 4.6.3 X11 llvmpipe, startup menu, flight transition, genuine A320, approach HUD and airport. Both startup scale=1.0. No script/shader errors; identical two 349524-byte GL texture shutdown leaks in both profiles. Not Safari GPU validation.",
     "web_graphics": "not verified",
     "phone": "not verified",
     "actual_audio_output": "cloud native has no audio device; not heard",
-    "art_assets": 15,
-    "mobile_shell_state": 36,
+    "art_assets": 26,
+    "mobile_shell_state": 74,
     "mobile_export": 4,
-    "wasm_assembly": 12
+    "wasm_assembly": 12,
+    "startup_independent_dom_assertions": 1102,
+    "mobile_shell_browser": "Not run: Chromium fails before launch with socket() Operation not permitted in executor sandbox",
+    "pack_a320": "Final exported PackedScene loads; original 5229 triangle / 1K atlas source unchanged; distributed model credits and license byte-match source",
+    "startup_independent_failure_assertions": 7,
+    "independent_review": "No P1 blockers; exact source/artifact checksums, 27 PCK MD5 entries and source/export shell identity verified"
   },
   "art_revision": "A320 imported model slice, based on 730e348999fc0907d17f5b8005f7d8cd4fcde62e",
   "asset_budget": {
@@ -183,5 +188,23 @@
     "engine_changed": false,
     "runtime_metrics": "godot-cloudline/verification/art-after-native.json",
     "mobile_performance": "unverified"
+  },
+  "startup_revision": "CL-SAFARI-1 conservative mitigation; exact base 23b0ddf78089b854b048205262d3b32b7beff244; device root cause unconfirmed",
+  "startup_profile": {
+    "ios_safari": {
+      "standard_terrain_pavement": true,
+      "canvas_max_dpr": 1.5,
+      "canvas_max_pixels": 1000000,
+      "startup_3d_scale": 1.0
+    },
+    "other_mobile": {
+      "standard_terrain_pavement": false,
+      "canvas_max_dpr": 2,
+      "canvas_max_pixels": 1500000,
+      "startup_3d_scale": 1.0
+    },
+    "desktop_other": "unchanged",
+    "diagnostics": "local only; manual reload; no telemetry",
+    "scale_decision": "0.85 rejected after native extra-render-target memory increase"
   }
 }
