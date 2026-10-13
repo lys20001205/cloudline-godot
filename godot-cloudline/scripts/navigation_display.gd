@@ -1,10 +1,11 @@
 class_name CloudlineNavigation
 extends Control
 ## Read-only native navigation/PFD presentation of cloudline/app.js.
-## Simulation +X is east, +Z is north. Maps retain the original local north-up
-## airport schematic; the compass includes each airport's reference heading.
+## BKI uses real north-up map coordinates with -X to runway-right in Godot.
+## Other airport schematics retain their existing authored coordinate convention.
 ## Set game (with flight and optional route), mode, font, and size from the HUD.
 
+const BKI_BEARING_DEG: float = 22.80738311997575
 const MAP_EXTENT: float = 7500.0
 const MAP_PIXELS: int = 200
 const PFD_SIZE: Vector2 = Vector2(276.0, 108.0)
@@ -43,11 +44,11 @@ func _process(_delta: float) -> void:
 
 
 static func heading_offset(airport_key: String) -> float:
-	return deg_to_rad(20.0 if airport_key == "bki" else 10.0 if airport_key == "can" else 0.0)
+	return deg_to_rad(BKI_BEARING_DEG if airport_key == "bki" else 10.0 if airport_key == "can" else 0.0)
 
 
 static func heading_degrees(yaw: float, airport_key: String) -> float:
-	return fposmod(rad_to_deg(yaw + heading_offset(airport_key)), 360.0)
+	return fposmod(rad_to_deg((-yaw if airport_key=="bki" else yaw) + heading_offset(airport_key)), 360.0)
 
 
 static func airport_bearing_degrees(position_3d: Vector3, airport_key: String) -> float:
@@ -60,7 +61,9 @@ static func airport_distance_nm(position_3d: Vector3) -> float:
 	return Vector2(position_3d.x, position_3d.z).length() / 1852.0
 
 
-static func airport_pointer_angle(position_3d: Vector3, yaw: float) -> float:
+static func airport_pointer_angle(position_3d: Vector3, yaw: float, airport_key: String="") -> float:
+	if airport_key=="bki":
+		return -airport_pointer_angle(position_3d,yaw,"")
 	# The same heading offset is applied to bearing and compass, so it cancels.
 	if Vector2(position_3d.x, position_3d.z).length_squared() < 0.000001:
 		return -yaw
@@ -75,17 +78,17 @@ static func map_center(position_3d: Vector3, big: bool = false) -> Vector2:
 	return Vector2.ZERO if big else Vector2(position_3d.x, position_3d.z) * 0.65
 
 
-static func world_to_map(point: Vector2, dimensions: Vector2, position_3d: Vector3 = Vector3.ZERO, big: bool = false) -> Vector2:
-	var offset: Vector2 = (point - map_center(position_3d, big)) * map_scale(dimensions, big)
+static func world_to_map(point: Vector2, dimensions: Vector2, position_3d: Vector3 = Vector3.ZERO, big: bool = false, airport_key: String="") -> Vector2:
+	var offset: Vector2 = world_map_axes(point - map_center(position_3d, big),airport_key) * map_scale(dimensions, big)
 	return dimensions * 0.5 + Vector2(offset.x, -offset.y)
 
 
-static func map_to_world(point: Vector2, dimensions: Vector2, position_3d: Vector3 = Vector3.ZERO, big: bool = false) -> Vector2:
+static func map_to_world(point: Vector2, dimensions: Vector2, position_3d: Vector3 = Vector3.ZERO, big: bool = false, airport_key: String="") -> Vector2:
 	var scale_factor: float = map_scale(dimensions, big)
 	if is_zero_approx(scale_factor):
 		return map_center(position_3d, big)
 	var offset: Vector2 = (point - dimensions * 0.5) / scale_factor
-	return map_center(position_3d, big) + Vector2(offset.x, -offset.y)
+	return map_center(position_3d, big) + map_axes_world(Vector2(offset.x, -offset.y),airport_key)
 
 
 static func route_curve_point(progress: float, dimensions: Vector2) -> Vector2:
@@ -119,7 +122,8 @@ static func terrain_texture(flight) -> Texture2D:
 		var terrain: Image = Image.create(MAP_PIXELS, MAP_PIXELS, false, Image.FORMAT_RGB8)
 		for y in range(MAP_PIXELS):
 			for x in range(MAP_PIXELS):
-				var height: float = flight.terrain_height((float(x) / MAP_PIXELS - 0.5) * MAP_EXTENT * 2.0, (0.5 - float(y) / MAP_PIXELS) * MAP_EXTENT * 2.0)
+				var world: Vector2=map_axes_world(Vector2((float(x)/MAP_PIXELS-.5)*MAP_EXTENT*2.0,(.5-float(y)/MAP_PIXELS)*MAP_EXTENT*2.0),key)
+				var height: float = flight.terrain_height(world.x,world.y)
 				terrain.set_pixel(x, y, terrain_color(height))
 		_terrain_cache[key] = ImageTexture.create_from_image(terrain)
 	return _terrain_cache[key]
@@ -174,16 +178,16 @@ func _label(value: String, at: Vector2, font_size: int = 12, color: Color = MUTE
 
 
 func _map_point(point: Vector2, flight, big: bool) -> Vector2:
-	return world_to_map(point, size, flight.p, big)
+	return world_to_map(point, size, flight.p, big,flight.airport_key)
 
 
 func _draw_map(flight, big: bool) -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Color("153945"))
-	var top_left: Vector2 = _map_point(Vector2(-MAP_EXTENT, MAP_EXTENT), flight, big)
+	var top_left: Vector2 = _map_point(map_axes_world(Vector2(-MAP_EXTENT,MAP_EXTENT),flight.airport_key), flight, big)
 	var extent: float = MAP_EXTENT * 2.0 * map_scale(size, big)
 	draw_texture_rect(terrain_texture(flight), Rect2(top_left, Vector2.ONE * extent), false)
 	for coordinate in range(-15000, 15001, 2000):
-		var grid: Vector2 = _map_point(Vector2(coordinate, coordinate), flight, big)
+		var grid: Vector2 = _map_point(map_axes_world(Vector2(coordinate,coordinate),flight.airport_key), flight, big)
 		draw_line(Vector2(grid.x, 0), Vector2(grid.x, size.y), Color("a4c8b21f"))
 		draw_line(Vector2(0, grid.y), Vector2(size.x, grid.y), Color("a4c8b21f"))
 	var length: float = flight.runway_length
@@ -208,7 +212,7 @@ func _draw_map(flight, big: bool) -> void:
 				draw_arc(point, 9.0 if big else 6.0, 0.0, TAU, 32, GOLD, 1.0, true)
 			if big:
 				_label(str(index + 1), point + Vector2(8, -6), 14, gate_color(index, flight.gate))
-	_draw_aircraft(_map_point(Vector2(flight.p.x, flight.p.z), flight, big), flight.yaw, 13.0 if big else 10.0)
+	_draw_aircraft(_map_point(Vector2(flight.p.x, flight.p.z), flight, big), (deg_to_rad(heading_degrees(flight.yaw,"bki")) if flight.airport_key=="bki" else flight.yaw), 13.0 if big else 10.0)
 	draw_rect(Rect2(0, 0, 54, 30), Color("102d3bcc"))
 	_label("N ↑", Vector2(10, 22), 17 if big else 15, Color("cde4d8"))
 	var footer_height: float = 48.0 if big else 23.0
@@ -271,6 +275,7 @@ func _draw_pfd(flight) -> void:
 
 
 func _draw_attitude(flight) -> void:
+	var display_bank: float=attitude_bank(flight.bank,flight.airport_key)
 	var center: Vector2 = Vector2(56, 50)
 	var radius: float = 38.0
 	var pitch_shift: float = rad_to_deg(flight.pitch) * 1.35
@@ -278,10 +283,10 @@ func _draw_attitude(flight) -> void:
 	# Clip the rotated ground half-plane to a circular 96-vertex instrument.
 	var ground: PackedVector2Array = PackedVector2Array()
 	var previous: Vector2 = Vector2(radius, 0)
-	var previous_distance: float = previous.rotated(flight.bank).y - pitch_shift
+	var previous_distance: float = previous.rotated(display_bank).y - pitch_shift
 	for index in range(1, 97):
 		var current: Vector2 = Vector2.from_angle(index * TAU / 96.0) * radius
-		var distance: float = current.rotated(flight.bank).y - pitch_shift
+		var distance: float = current.rotated(display_bank).y - pitch_shift
 		if (distance >= 0.0) != (previous_distance >= 0.0):
 			ground.append(center + previous.lerp(current, previous_distance / (previous_distance - distance)))
 		if distance >= 0.0:
@@ -293,7 +298,7 @@ func _draw_attitude(flight) -> void:
 	for angle in range(-20, 21, 10):
 		var half_width: float = 100.0 if angle == 0 else 12.0
 		var height: float = -angle * 1.35 + pitch_shift
-		var segment: PackedVector2Array = circle_clipped_line(Vector2(-half_width, height).rotated(-flight.bank), Vector2(half_width, height).rotated(-flight.bank), radius)
+		var segment: PackedVector2Array = circle_clipped_line(Vector2(-half_width, height).rotated(-display_bank), Vector2(half_width, height).rotated(-display_bank), radius)
 		if segment.size() == 2:
 			draw_line(center + segment[0], center + segment[1], Color("e3e8d6"), 1.0, true)
 	draw_arc(center, radius, 0.0, TAU, 96, Color("729797"), 1.0, true)
@@ -303,7 +308,7 @@ func _draw_attitude(flight) -> void:
 
 func _draw_compass(flight) -> void:
 	var center: Vector2 = Vector2(149, 49)
-	var rotation_angle: float = -flight.yaw - heading_offset(flight.airport_key)
+	var rotation_angle: float = -deg_to_rad(heading_degrees(flight.yaw,flight.airport_key))
 	draw_arc(center, 34.0, 0.0, TAU, 80, Color("64888b"), 1.0, true)
 	for index in range(12):
 		var direction: Vector2 = Vector2(sin(index * PI / 6.0), -cos(index * PI / 6.0)).rotated(rotation_angle)
@@ -311,7 +316,7 @@ func _draw_compass(flight) -> void:
 	for index in range(4):
 		var direction: Vector2 = Vector2(sin(index * PI / 2.0), -cos(index * PI / 2.0)).rotated(rotation_angle)
 		_label(["N", "E", "S", "W"][index], center + direction * 23 + Vector2(0, 3), 9, Color("d8e8d9"), true)
-	var bearing: float = airport_pointer_angle(flight.p, flight.yaw)
+	var bearing: float = airport_pointer_angle(flight.p, flight.yaw,flight.airport_key)
 	var needle: PackedVector2Array = PackedVector2Array()
 	for point in [Vector2(0, 29), Vector2(0, -29), Vector2(-4, -20), Vector2(0, -29), Vector2(4, -20)]:
 		needle.append(center + point.rotated(bearing))
@@ -319,3 +324,22 @@ func _draw_compass(flight) -> void:
 	draw_colored_polygon(PackedVector2Array([center + Vector2(0, -9), center + Vector2(-5, 7), center + Vector2(5, 7)]), GOLD)
 	_label("%03d°" % (roundi(heading_degrees(flight.yaw, flight.airport_key)) % 360), Vector2(149, 9), 8, GOLD, true)
 	_label("NAV / 导航", Vector2(149, 99), 8, MUTED, true)
+
+static func heading_to_yaw(degrees: float,airport_key: String) -> float:
+	var relative=deg_to_rad(degrees)-heading_offset(airport_key)
+	return -relative if airport_key=="bki" else relative
+
+static func world_map_axes(point: Vector2,airport_key: String) -> Vector2:
+	return Vector2(-point.x,point.y).rotated(-heading_offset("bki")) if airport_key=="bki" else point
+
+static func map_axes_world(point: Vector2,airport_key: String) -> Vector2:
+	if airport_key!="bki":return point
+	var rotated=point.rotated(heading_offset("bki"))
+	return Vector2(-rotated.x,rotated.y)
+
+static func manual_axis(value: float,airport_key: String) -> float:
+	# Force-model yaw/bank is unchanged; BKI's real-world camera-right is -X.
+	return -value if airport_key=="bki" else value
+
+static func attitude_bank(bank: float,airport_key: String) -> float:
+	return -bank if airport_key=="bki" else bank

@@ -1,12 +1,15 @@
 extends RefCounted
 class_name CloudlineWorld
 
+const BKI = preload("res://scripts/bki_scenery.gd")
+
 const A320_MODEL = preload("res://assets/models/a320/A320_nologo.glb")
 
 var root: Node3D
 var materials: Dictionary = {}
 # Selected once before scene creation; imported A320 materials stay unchanged.
 var conservative_materials := false
+var compact_geography := false
 
 func mat(color: String) -> StandardMaterial3D:
 	if materials.has(color): return materials[color]
@@ -62,7 +65,10 @@ func build(parent: Node3D, key: String, model) -> Node3D:
 		elevation = 30.0
 		length = 2100.0
 	box(root, Vector3(0,-8,0), Vector3(120000,10,120000), "14617b")
-	if key != "sea":
+	if key == "bki":
+		BKI.new().build(root,compact_geography or conservative_materials)
+		build_bki_runway(elevation,length)
+	elif key != "sea":
 		terrain(model)
 		box(root,Vector3(0,elevation+0.05,0),Vector3(100,.1,length+180),"727d62")
 		box(root,Vector3(0,elevation+.15,0),Vector3(45,.2,length),"303b42")
@@ -284,3 +290,15 @@ func batch_static_boxes() -> void:
 		var batch:=MultiMeshInstance3D.new(); batch.multimesh=multi
 		batch.material_override=material; batch.name="StaticBatch"
 		root.add_child(batch)
+
+func build_bki_runway(elevation: float,length: float) -> void:
+	# Markings are authored game detail; the centerline/endpoints align to OSM.
+	box(root,Vector3(0,elevation+.15,0),Vector3(45,.2,length),"303b42")
+	for z in range(int(-length/2+60),int(length/2),64):
+		box(root,Vector3(0,elevation+.29,z),Vector3(1.5,.04,31),"f2eee0")
+	for x in [-21,21]: box(root,Vector3(x,elevation+.29,0),Vector3(.7,.04,length-40),"f2eee0")
+	for sign_z in [-1,1]:
+		for x in [-17,-12,-7,7,12,17]: box(root,Vector3(x,elevation+.3,sign_z*(length/2-48)),Vector3(2.8,.05,34),"f2eee0")
+		for x in [-14,14]: box(root,Vector3(x,elevation+.3,sign_z*(length/2-290)),Vector3(5.5,.05,48),"f2eee0")
+	for z in range(int(-length/2),int(length/2),100):
+		for x in [-26,26]: box(root,Vector3(x,elevation+.8,z),Vector3(1.2,.6,1.2),"ffe2a0")

@@ -1,0 +1,65 @@
+{
+  "detail_profile": "mobile-safe",
+  "building_budget": 600,
+  "source": "OpenStreetMap contributors / Mapzen Terrain Tiles",
+  "bounds_wsen": [
+    115.98,
+    5.88,
+    116.12,
+    6.04
+  ],
+  "coordinate_handedness": "Godot +Y up, +Z runway02, -X right/east of runway",
+  "runway_true_bearing_deg": 22.80738311997575,
+  "origin_lon_lat": [
+    116.04931055,
+    5.9328414
+  ],
+  "axis_east_north": [
+    0.38763437429214553,
+    0.9218132087723286
+  ],
+  "scale": 1.0720704149649944,
+  "source_runway_length_m": 3525.887802923305,
+  "game_runway_length_m": 3780,
+  "runway_way_id": 48760813,
+  "runway_ref": "02/20",
+  "source_endpoints_lon_lat": [
+    [
+      116.0431317,
+      5.9182265
+    ],
+    [
+      116.0554894,
+      5.9474563
+    ]
+  ],
+  "counts": {
+    "roads": 3325,
+    "taxiways": 102,
+    "buildings": 600,
+    "aprons": 6
+  },
+  "chunks": 16,
+  "mesh_files": [
+    "chunk_0_2.res",
+    "chunk_1_1.res",
+    "chunk_1_2.res",
+    "chunk_1_3.res",
+    "chunk_1_4.res",
+    "chunk_1_5.res",
+    "chunk_2_1.res",
+    "chunk_2_2.res",
+    "chunk_2_3.res",
+    "chunk_2_4.res",
+    "chunk_2_5.res",
+    "chunk_3_3.res",
+    "chunk_3_4.res",
+    "chunk_4_2.res",
+    "chunk_4_3.res",
+    "chunk_4_4.res"
+  ],
+  "triangles": 39257,
+  "dem_outliers_filtered": 84,
+  "airport_grading": "3m inside [-760,-2000,85,2000], 450m blend",
+  "buildings": "OSM footprints, tagged height/levels where present; otherwise estimated 6m, not photogrammetry"
+}

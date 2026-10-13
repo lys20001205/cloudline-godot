@@ -217,7 +217,7 @@ func build_menu() -> void:
 	credits.fit_content=true
 	credits.scroll_active=false
 	credits.add_theme_font_size_override("normal_font_size",12)
-	credits.text="A320 model: [url=https://github.com/amvlab/aircraft-models]amvlab[/url] · [url=https://creativecommons.org/licenses/by/4.0/]CC BY 4.0[/url]\nAdapted orientation; added game gear. L-4/J-120 remain simplified."
+	credits.text="A320 model: [url=https://github.com/amvlab/aircraft-models]amvlab[/url] · [url=https://creativecommons.org/licenses/by/4.0/]CC BY 4.0[/url]\nAdapted orientation; added game gear. L-4/J-120 remain simplified.\nBKI map: [url=https://www.openstreetmap.org/copyright]© OpenStreetMap contributors · ODbL[/url]\nTerrain: [url=https://www.mapzen.com/rights/]Mapzen / SRTM[/url]. Building heights estimated; airport graded.\n[url=https://lys20001205.github.io/cloudline-godot/bki-map-data.zip]Download map source, modifications & licenses[/url]"
 	credits.meta_clicked.connect(func(link): OS.shell_open(str(link)))
 	col.add_child(credits)
 
@@ -307,7 +307,7 @@ func _process(_dt: float) -> void:
 	var f=game.flight
 	var r=game.route
 	title_label.text="CLOUDLINE  /  %s  ·  %s" % [f.spec.name,r.phase_name if game.is_route else "自由飞行 / FREE FLIGHT"]
-	data_label.text="%03d kt   |   %05d ft   |   V/S %+.0f ft/min   |   HDG %03d°" % [f.ias*1.94384,f.p.y*3.28084,f.v.y*196.85,fposmod(rad_to_deg(f.yaw+game.heading_offset()),360)]
+	data_label.text="%03d kt   |   %05d ft   |   V/S %+.0f ft/min   |   HDG %03d°" % [f.ias*1.94384,f.p.y*3.28084,f.v.y*196.85,Navigation.heading_degrees(f.yaw,f.airport_key)]
 	secondary_label.text="GS %d kt  ·  AGL %d ft  ·  %.1f G  ·  %02d:%02d" % [f.gs*1.94384,f.agl*3.28084,1.0 if f.grounded else f.load_factor,int(f.t)/60,int(f.t)%60]
 	hint_label.text=r.hint(f) if game.is_route else ("引导圈 %d / %d · %s" % [f.gate,f.gates.size(),f.gates[mini(f.gate,f.gates.size()-1)].name] if f.mode=="lesson" else "探索岛屿 · 在跑道内安全着陆")
 	notice_label.text="PAUSED · 点击继续" if paused else (f.crash_reason+" · 菜单可重新开始" if f.crashed else "  ".join(f.warnings))
@@ -457,7 +457,7 @@ func add_system_slider(col: VBoxContainer, title: String, id: String, low: float
 	slider.value_changed.connect(func(value):
 		value_label.text="%.3f" % value if id=="trim" else "%d" % value
 		if id=="trim": game.flight.trim=value
-		elif id=="heading": game.flight.ap.heading=deg_to_rad(value)-game.heading_offset()
+		elif id=="heading": game.flight.ap.heading=Navigation.heading_to_yaw(value,game.flight.airport_key)
 		elif id=="speed": game.flight.ap.speed=value/1.94384
 		else: game.flight.ap.alt=value/3.28084)
 	col.add_child(row)
@@ -478,7 +478,7 @@ func show_systems() -> void:
 			var slider=child.get_child(1)
 			var id=slider.name
 			var value=game.flight.trim if id=="trim" else game.flight.ap[id]
-			if id=="heading": value=fposmod(rad_to_deg(value+game.heading_offset()),360)
+			if id=="heading": value=Navigation.heading_degrees(value,game.flight.airport_key)
 			if id=="speed": value*=1.94384
 			if id=="alt": value*=3.28084
 			slider.set_value_no_signal(value)

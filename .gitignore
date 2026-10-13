@@ -1,3 +1,6 @@
 cloudline-godot/index.wasm
 godot-cloudline/.godot/
 **/__pycache__/
+# Reproducible geodata bake intermediates; .res derivatives are distributed.
+godot-cloudline/assets/geodata/bki/*.bin
+godot-cloudline/assets/geodata/bki/mobile/*.bin

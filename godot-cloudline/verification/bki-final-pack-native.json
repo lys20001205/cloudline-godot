@@ -1,0 +1,107 @@
+{
+  "aircraft-ground": {
+    "display": "X11",
+    "draw_calls": 34.0,
+    "fps_observed": 52.0,
+    "png_error": 0,
+    "primitives": 23849.0,
+    "rendered_objects": 34.0,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "texture_memory_bytes": 14742741.0,
+    "video_memory_bytes": 24903341.0,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "bki-airport": {
+    "display": "X11",
+    "draw_calls": 31.0,
+    "fps_observed": 47.0,
+    "png_error": 0,
+    "primitives": 33690.0,
+    "rendered_objects": 31.0,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "texture_memory_bytes": 14742741.0,
+    "video_memory_bytes": 24903341.0,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "bki-coastal": {
+    "display": "X11",
+    "draw_calls": 54.0,
+    "fps_observed": 33.0,
+    "png_error": 0,
+    "primitives": 48506.0,
+    "rendered_objects": 54.0,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "texture_memory_bytes": 14742741.0,
+    "video_memory_bytes": 24903341.0,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "runway02-approach": {
+    "display": "X11",
+    "draw_calls": 63.0,
+    "fps_observed": 27.0,
+    "png_error": 0,
+    "primitives": 51871.0,
+    "rendered_objects": 63.0,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "texture_memory_bytes": 14742741.0,
+    "video_memory_bytes": 24903341.0,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "runway02-departure": {
+    "display": "X11",
+    "draw_calls": 25.0,
+    "fps_observed": 49.0,
+    "png_error": 0,
+    "primitives": 30175.0,
+    "rendered_objects": 25.0,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "texture_memory_bytes": 14742741.0,
+    "video_memory_bytes": 24903341.0,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "runway20-approach": {
+    "display": "X11",
+    "draw_calls": 44.0,
+    "fps_observed": 35.0,
+    "png_error": 0,
+    "primitives": 39775.0,
+    "rendered_objects": 44.0,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "texture_memory_bytes": 14742741.0,
+    "video_memory_bytes": 24903341.0,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "startup-menu": {
+    "display": "X11",
+    "draw_calls": 204.0,
+    "fps_observed": 19.0,
+    "png_error": 0,
+    "primitives": 59251.0,
+    "rendered_objects": 1207.0,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "texture_memory_bytes": 14742741.0,
+    "video_memory_bytes": 24924029.0,
+    "viewport": [
+      1280,
+      720
+    ]
+  }
+}
