@@ -1,0 +1,166 @@
+{
+  "retrieved_utc": "2026-10-12",
+  "status": "complete requested bbox via 13 non-overlapping geographic tiles plus an initial overlapping airport core",
+  "requested_bounds_wsen": [
+    115.98,
+    5.88,
+    116.12,
+    6.04
+  ],
+  "files": [
+    {
+      "file": "bki_core_api.xml",
+      "bounds": {
+        "minlat": "5.9070000",
+        "minlon": "116.0350000",
+        "maxlat": "5.9480000",
+        "maxlon": "116.0650000"
+      },
+      "sha256": "ff61aad6300f662c5915bbeb466e0373cf1dbe07787b9c868d1546daf1749eb0",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0350000,5.9070000,116.0650000,5.9480000"
+    },
+    {
+      "file": "bki_osm_dense_0.xml",
+      "bounds": {
+        "minlat": "5.9200000",
+        "minlon": "116.0500000",
+        "maxlat": "5.9400000",
+        "maxlon": "116.0675000"
+      },
+      "sha256": "71def5bcff5071701c73227e50972e542ecbb49b7495bff1172b98ef010e55e6",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0500000,5.9200000,116.0675000,5.9400000"
+    },
+    {
+      "file": "bki_osm_dense_1.xml",
+      "bounds": {
+        "minlat": "5.9200000",
+        "minlon": "116.0675000",
+        "maxlat": "5.9400000",
+        "maxlon": "116.0850000"
+      },
+      "sha256": "fa5e97d1683a5b0f81b1299c53aa0f21a92f2a082f85a4cb63dbb6cb5ef5e3c6",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0675000,5.9200000,116.0850000,5.9400000"
+    },
+    {
+      "file": "bki_osm_dense_2.xml",
+      "bounds": {
+        "minlat": "5.9400000",
+        "minlon": "116.0500000",
+        "maxlat": "5.9600000",
+        "maxlon": "116.0675000"
+      },
+      "sha256": "4d28437fa360ca71ac7b975321bd2a96ba21c1de39dc05d5d23aa39a401e7b95",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0500000,5.9400000,116.0675000,5.9600000"
+    },
+    {
+      "file": "bki_osm_dense_3.xml",
+      "bounds": {
+        "minlat": "5.9400000",
+        "minlon": "116.0675000",
+        "maxlat": "5.9600000",
+        "maxlon": "116.0850000"
+      },
+      "sha256": "64daea5267c517b66eeaaa86dbdb6c6bdea74908c1bf8f159ea86cf0195c4e21",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0675000,5.9400000,116.0850000,5.9600000"
+    },
+    {
+      "file": "bki_osm_quadrant_0.xml",
+      "bounds": {
+        "minlat": "5.8800000",
+        "minlon": "115.9800000",
+        "maxlat": "5.9600000",
+        "maxlon": "116.0500000"
+      },
+      "sha256": "4a841c91bd2a7ecd7133abdb0199f8188ec60ba9c74affd33983bfdcf5372541",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=115.9800000,5.8800000,116.0500000,5.9600000"
+    },
+    {
+      "file": "bki_osm_quadrant_2.xml",
+      "bounds": {
+        "minlat": "5.9600000",
+        "minlon": "115.9800000",
+        "maxlat": "6.0400000",
+        "maxlon": "116.0500000"
+      },
+      "sha256": "b1f8543125cfd5f18a89f2cf03e600106ae745a301c7cf0344ad4453a09506c0",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=115.9800000,5.9600000,116.0500000,6.0400000"
+    },
+    {
+      "file": "bki_osm_subtile_0.xml",
+      "bounds": {
+        "minlat": "5.8800000",
+        "minlon": "116.0500000",
+        "maxlat": "5.9200000",
+        "maxlon": "116.0850000"
+      },
+      "sha256": "055cd457b124fdad4b7eee4db76e55417e6b2b63f3cf8faf785a302d57d3b246",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0500000,5.8800000,116.0850000,5.9200000"
+    },
+    {
+      "file": "bki_osm_subtile_1.xml",
+      "bounds": {
+        "minlat": "5.8800000",
+        "minlon": "116.0850000",
+        "maxlat": "5.9200000",
+        "maxlon": "116.1200000"
+      },
+      "sha256": "bb33b85ba43568fe2861993b6d0af293ab7fd62d002a271ad7fc522466d62b31",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0850000,5.8800000,116.1200000,5.9200000"
+    },
+    {
+      "file": "bki_osm_subtile_3.xml",
+      "bounds": {
+        "minlat": "5.9200000",
+        "minlon": "116.0850000",
+        "maxlat": "5.9600000",
+        "maxlon": "116.1200000"
+      },
+      "sha256": "e30b4fd9ebb1cd466a873a90d9222412d7a7c81edb7abf6df491e2b5a4e6c1be",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0850000,5.9200000,116.1200000,5.9600000"
+    },
+    {
+      "file": "bki_osm_subtile_4.xml",
+      "bounds": {
+        "minlat": "5.9600000",
+        "minlon": "116.0500000",
+        "maxlat": "6.0000000",
+        "maxlon": "116.0850000"
+      },
+      "sha256": "a104288b86b533a7e9777c7435aedffa8fd914b08b1f609555decd7287484baa",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0500000,5.9600000,116.0850000,6.0000000"
+    },
+    {
+      "file": "bki_osm_subtile_5.xml",
+      "bounds": {
+        "minlat": "5.9600000",
+        "minlon": "116.0850000",
+        "maxlat": "6.0000000",
+        "maxlon": "116.1200000"
+      },
+      "sha256": "ed7e9d808854a350bd6a1ce7c05c48a2b8883179bd14515ccdcccb537571c8b8",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0850000,5.9600000,116.1200000,6.0000000"
+    },
+    {
+      "file": "bki_osm_subtile_6.xml",
+      "bounds": {
+        "minlat": "6.0000000",
+        "minlon": "116.0500000",
+        "maxlat": "6.0400000",
+        "maxlon": "116.0850000"
+      },
+      "sha256": "421af913b8545314673e77f251e5bcec068b4c321afcb6e703d1f9555b0f1cfc",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0500000,6.0000000,116.0850000,6.0400000"
+    },
+    {
+      "file": "bki_osm_subtile_7.xml",
+      "bounds": {
+        "minlat": "6.0000000",
+        "minlon": "116.0850000",
+        "maxlat": "6.0400000",
+        "maxlon": "116.1200000"
+      },
+      "sha256": "ee9e9decdfa15af9ba44472a2725e9d4b1be6ee7a3b485e54164f3917f7d7ddd",
+      "url": "https://api.openstreetmap.org/api/0.6/map?bbox=116.0850000,6.0000000,116.1200000,6.0400000"
+    }
+  ]
+}

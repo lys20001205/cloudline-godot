@@ -208,3 +208,7 @@ mitigation plus local diagnostics, not a verified iPhone compatibility fix.
 Tests separately assert material choice, finite shader math and canvas budgets.
 A combined-profile improvement cannot identify which hypothesis caused the device
 issue. Native llvmpipe and mock-browser tests cannot validate Safari's actual GPU.
+
+## BKI geographic scenery
+
+The BKI airport/coastal departure now uses actual OpenStreetMap coastlines, road and airport geometry, selected building footprints, and openly sourced elevation, baked offline into shader-free district meshes. This is a bounded16×18 km visual slice, not a real-world BKI–CAN terrain corridor or photogrammetry. Airport grading, uniform runway alignment scale, estimated building heights and terrain cleanup are disclosed in [geodata documentation](assets/geodata/bki/README.md). Source/derived geographic data are ODbL with visible in-game attribution; separate third-party aircraft licenses remain intact. Safari/iOS material fallback and existing shell pixel limits are preserved.

@@ -1,0 +1,175 @@
+{
+  "pck_sha256": "7777f1490be334b6b708325817a80fa04264f0b78a0c3634438c8124c0cc894d",
+  "execution": "Independent Godot4.6.3 native X11 Compatibility llvmpipe,1280x720, explicit --cloudline-safe-render",
+  "scope": "Rendered startup menu, ground, airport, coast, both runway approach views, northbound departure; injected actual HUD axis values through main._physics_process",
+  "results": {
+    "assets_load": true,
+    "runway_visually_clear": true,
+    "coast_orientation_northbound_sea_left_southbound_sea_right": true,
+    "hud_rudder_geographic_heading_and_physical_side": true,
+    "hud_roll_actual_wing_side": true,
+    "profile_conservative": true,
+    "scale_3d": 1
+  },
+  "before_metrics": {
+    "aircraft-ground": {
+      "display": "X11",
+      "draw_calls": 34.0,
+      "fps_observed": 52.0,
+      "png_error": 0,
+      "primitives": 33737.0,
+      "rendered_objects": 34.0,
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "texture_memory_bytes": 15092267.0,
+      "video_memory_bytes": 23740691.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "bki-airport": {
+      "display": "X11",
+      "draw_calls": 50.0,
+      "fps_observed": 45.0,
+      "png_error": 0,
+      "primitives": 33009.0,
+      "rendered_objects": 50.0,
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "texture_memory_bytes": 15092267.0,
+      "video_memory_bytes": 23740691.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "bki-coastal": {
+      "display": "X11",
+      "draw_calls": 58.0,
+      "fps_observed": 44.0,
+      "png_error": 0,
+      "primitives": 35313.0,
+      "rendered_objects": 58.0,
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "texture_memory_bytes": 15092267.0,
+      "video_memory_bytes": 23740691.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    }
+  },
+  "final_metrics": {
+    "aircraft-ground": {
+      "display": "X11",
+      "draw_calls": 34.0,
+      "fps_observed": 52.0,
+      "png_error": 0,
+      "primitives": 23849.0,
+      "rendered_objects": 34.0,
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "texture_memory_bytes": 14742741.0,
+      "video_memory_bytes": 24903341.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "bki-airport": {
+      "display": "X11",
+      "draw_calls": 31.0,
+      "fps_observed": 47.0,
+      "png_error": 0,
+      "primitives": 33690.0,
+      "rendered_objects": 31.0,
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "texture_memory_bytes": 14742741.0,
+      "video_memory_bytes": 24903341.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "bki-coastal": {
+      "display": "X11",
+      "draw_calls": 54.0,
+      "fps_observed": 33.0,
+      "png_error": 0,
+      "primitives": 48506.0,
+      "rendered_objects": 54.0,
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "texture_memory_bytes": 14742741.0,
+      "video_memory_bytes": 24903341.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "runway02-approach": {
+      "display": "X11",
+      "draw_calls": 63.0,
+      "fps_observed": 27.0,
+      "png_error": 0,
+      "primitives": 51871.0,
+      "rendered_objects": 63.0,
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "texture_memory_bytes": 14742741.0,
+      "video_memory_bytes": 24903341.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "runway02-departure": {
+      "display": "X11",
+      "draw_calls": 25.0,
+      "fps_observed": 49.0,
+      "png_error": 0,
+      "primitives": 30175.0,
+      "rendered_objects": 25.0,
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "texture_memory_bytes": 14742741.0,
+      "video_memory_bytes": 24903341.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "runway20-approach": {
+      "display": "X11",
+      "draw_calls": 44.0,
+      "fps_observed": 35.0,
+      "png_error": 0,
+      "primitives": 39775.0,
+      "rendered_objects": 44.0,
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "texture_memory_bytes": 14742741.0,
+      "video_memory_bytes": 24903341.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "startup-menu": {
+      "display": "X11",
+      "draw_calls": 204.0,
+      "fps_observed": 19.0,
+      "png_error": 0,
+      "primitives": 59251.0,
+      "rendered_objects": 1207.0,
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "texture_memory_bytes": 14742741.0,
+      "video_memory_bytes": 24924029.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    }
+  },
+  "limitations": [
+    "Native llvmpipe does not validate Safari/WebGL/device FPS or browser context-loss behavior",
+    "Static camera capture and scripted HUD-axis injection, not a manually flown full route",
+    "Menu native software FPS19; no pre-change menu baseline",
+    "Two349524-byte texture leaks reported at engine shutdown; no runtime load error"
+  ],
+  "comparability": "Ground camera unchanged; survey X position reflected to preserve geographic viewpoint after correcting map handedness; FPS single observations and variable"
+}

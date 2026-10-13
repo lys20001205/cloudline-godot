@@ -37,6 +37,7 @@ var airport_key: String = "bki"
 var elevation: float = 3.0
 var runway_length: float = 3780.0
 var obstacles: Array = []
+var geographic_obstacles := false
 var gates: Array = LESSON_GATES.duplicate(true)
 var route = null
 var t: float = 0.0
@@ -253,7 +254,7 @@ func step(dt: float, raw: Dictionary = {}) -> void:
 	else:
 		_step_air(dt, inp, air, speed, q, flap, thrust, req_alpha, b, fwd)
 	last_brake = inp.brake
-	for o: Dictionary in obstacles:
+	for o: Dictionary in collision_obstacles():
 		if absf(p.x - o.x) < o.w + 2.0 and absf(p.z - o.z) < o.d + 3.0 and p.y < o.h + 1.0:
 			crash("碰到机场建筑或障碍物。")
 			break
@@ -365,7 +366,7 @@ func _step_air(dt: float, inp: Dictionary, air: Vector3, speed: float, q: float,
 	var contact: float = ground + spec.gear_height
 	if p.y <= contact:
 		_contact_ground(contact)
-	for o: Dictionary in obstacles:
+	for o: Dictionary in collision_obstacles():
 		if absf(p.x - o.x) < o.w + 1.0 and absf(p.z - o.z) < o.d + 1.0 and p.y < o.h + 1.0 and p.y > ground_height(o.x, o.z):
 			crash("碰到机场建筑或障碍物。")
 			break
@@ -424,6 +425,8 @@ func is_runway(x: float, z: float) -> bool:
 	return airport_key != "sea" and absf(x) < (24.0 if airport_key == "island" else 22.5) and absf(z) < runway_length * 0.5
 
 func is_paved(x: float, z: float) -> bool:
+	if airport_key == "bki" and not is_runway(x,z):
+		return preload("res://scripts/bki_scenery.gd").is_paved(x,z)
 	if is_runway(x, z):
 		return true
 	if airport_key == "sea":
@@ -446,6 +449,8 @@ func ground_height(x: float, z: float) -> float:
 	return maxf(0.0, terrain_height(x, z))
 
 func terrain_height(x: float, z: float) -> float:
+	if airport_key == "bki":
+		return preload("res://scripts/bki_scenery.gd").height_at(x,z)
 	if airport_key == "sea":
 		return -80.0
 	if airport_key == "can":
@@ -480,3 +485,8 @@ static func _island_height(x: float, z: float) -> float:
 	h = lerpf(h, minf(h, 25.0), approach)
 	var airport: float = (1.0 - smooth(340.0, 650.0, absf(x))) * (1.0 - smooth(1180.0, 1570.0, absf(z)))
 	return lerpf(h, 30.0, airport)
+
+func collision_obstacles() -> Array:
+	if geographic_obstacles and airport_key=="bki":
+		return preload("res://scripts/bki_scenery.gd").nearby_obstacles(p.x,p.z)
+	return obstacles

@@ -177,7 +177,10 @@ func _test_obstacles() -> void:
 func _test_airports() -> void:
 	var f = _flight("a320")
 	f.select_airport("bki")
-	var bki: bool = f.is_runway(0.0, 1800.0) and not f.is_runway(30.0, 0.0) and f.is_paved(115.0, 300.0) and f.is_paved(245.0, -440.0) and f.terrain_height(-1000.0, 0.0) < 0.0
+	var geo=preload("res://scripts/bki_scenery.gd")
+	var west=geo.project(116.0,5.92)
+	var east=geo.project(116.07,5.93284)
+	var bki: bool = f.is_runway(0.0,1800.0) and not f.is_runway(30.0,0.0) and f.terrain_height(west.x,west.y)<0 and f.terrain_height(east.x,east.y)>0
 	f.select_airport("can")
 	var can: bool = f.elevation == 15.0 and f.is_runway(0.0, 1700.0) and not f.is_runway(0.0, 1900.0)
 	f.select_airport("sea")

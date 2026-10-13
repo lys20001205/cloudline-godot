@@ -35,6 +35,9 @@ func _ready() -> void:
 	if OS.has_feature("web"):
 		safe_profile = bool(JavaScriptBridge.eval("!!(window.cloudlineRenderProfile && window.cloudlineRenderProfile.simpleMaterials)"))
 	builder.conservative_materials = safe_profile
+	builder.compact_geography = safe_profile
+	if OS.has_feature("web"):
+		builder.compact_geography = bool(JavaScriptBridge.eval("!!(window.cloudlineRenderProfile && window.cloudlineRenderProfile.name !== 'standard')"))
 	# Keep 3D scale at the default 1.0: the shell already bounds the framebuffer.
 	# A separate scaled target added memory in native QA, so do not allocate one.
 	web_stage("scene-building")
@@ -131,7 +134,8 @@ func rebuild_world(key: String) -> void:
 	scene_key=key
 	# Collision structures match the simplified terminals and control tower.
 	flight.obstacles=[]
-	if key in ["bki","can"]:
+	flight.geographic_obstacles=(key=="bki")
+	if key == "can":
 		flight.obstacles.append({"x":500.0 if key=="can" else 405.0,"z":-440.0,"w":100.0 if key=="can" else 67.5,"d":230.0 if key=="can" else 220.0,"h":flight.elevation+(24 if key=="can" else 16)})
 		if key=="can":
 			for z in [-600.0,-280.0]: flight.obstacles.append({"x":405.0,"z":z,"w":87.5,"d":22.5,"h":flight.elevation+12})
@@ -157,6 +161,8 @@ func _physics_process(dt: float) -> void:
 			flight.ap.on=false
 			flight.power=clampf(flight.power+throttle_input*dt*.3,0,1)
 		var inp := {"pitch":clampf(pitch_input*sensitivity,-1,1),"roll":clampf(roll_input*sensitivity,-1,1),"yaw":clampf(yaw_input,-1,1),"brake":hud.brake or Input.is_physical_key_pressed(KEY_SPACE)}
+		inp.roll=preload("res://scripts/navigation_display.gd").manual_axis(inp.roll,flight.airport_key)
+		inp.yaw=preload("res://scripts/navigation_display.gd").manual_axis(inp.yaw,flight.airport_key)
 		if is_route: inp=route.guide_input(flight,inp,dt)
 		flight.step(dt,inp)
 		if is_route:
@@ -226,7 +232,7 @@ func cycle_camera() -> void:
 	update_visuals(1)
 
 func heading_offset() -> float:
-	return deg_to_rad(20 if scene_key=="bki" else 10 if scene_key=="can" else 0)
+	return preload("res://scripts/navigation_display.gd").heading_offset(scene_key)
 
 func set_lighting(value: String) -> void:
 	light_mode=value

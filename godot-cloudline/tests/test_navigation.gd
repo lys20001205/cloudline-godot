@@ -48,15 +48,15 @@ func snapshot(flight, mission) -> String:
 
 
 func run() -> void:
-	near(Navigation.heading_degrees(0.0, "bki"), 20.0, "BKI heading offset")
+	near(Navigation.heading_degrees(0.0, "bki"), Navigation.BKI_BEARING_DEG, "BKI heading offset")
 	near(Navigation.heading_degrees(0.0, "can"), 10.0, "CAN heading offset")
 	near(Navigation.heading_degrees(0.0, "island"), 0.0, "island heading offset")
 	near(Navigation.heading_degrees(0.0, "sea"), 0.0, "sea heading offset")
-	near(Navigation.heading_degrees(deg_to_rad(-30), "bki"), 350.0, "negative heading wraps")
+	near(Navigation.heading_degrees(deg_to_rad(-30), "bki"), Navigation.BKI_BEARING_DEG+30.0, "BKI yaw handedness")
 	near(Navigation.heading_degrees(TAU, "can"), 10.0, "full-turn heading wraps")
 	near(Navigation.airport_distance_nm(Vector3(1852, 12345, 0)), 1.0, "distance ignores altitude")
 	near(Navigation.airport_distance_nm(Vector3.ZERO), 0.0, "origin distance")
-	near(Navigation.airport_bearing_degrees(Vector3(0, 0, -1000), "bki"), 20.0, "airport ahead bearing")
+	near(Navigation.airport_bearing_degrees(Vector3(0, 0, -1000), "bki"), Navigation.BKI_BEARING_DEG, "airport ahead bearing")
 	near(Navigation.airport_bearing_degrees(Vector3(1000, 0, 0), "can"), 280.0, "airport west bearing")
 	near(Navigation.airport_bearing_degrees(Vector3.ZERO, "island"), 0.0, "coincident bearing defined")
 	near(Navigation.airport_pointer_angle(Vector3(0, 0, -1000), 0.0), 0.0, "airport pointer ahead")

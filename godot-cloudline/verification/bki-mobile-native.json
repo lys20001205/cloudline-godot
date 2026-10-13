@@ -1,0 +1,47 @@
+{
+  "aircraft-ground": {
+    "display": "X11",
+    "draw_calls": 31.0,
+    "fps_observed": 66.0,
+    "png_error": 0,
+    "primitives": 14104.0,
+    "rendered_objects": 31.0,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "texture_memory_bytes": 13868929.0,
+    "video_memory_bytes": 23968281.0,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "bki-airport": {
+    "display": "X11",
+    "draw_calls": 39.0,
+    "fps_observed": 47.0,
+    "png_error": 0,
+    "primitives": 26528.0,
+    "rendered_objects": 39.0,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "texture_memory_bytes": 13868929.0,
+    "video_memory_bytes": 23968281.0,
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "bki-coastal": {
+    "display": "X11",
+    "draw_calls": 53.0,
+    "fps_observed": 32.0,
+    "png_error": 0,
+    "primitives": 48356.0,
+    "rendered_objects": 53.0,
+    "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "texture_memory_bytes": 13868929.0,
+    "video_memory_bytes": 23968281.0,
+    "viewport": [
+      1280,
+      720
+    ]
+  }
+}
